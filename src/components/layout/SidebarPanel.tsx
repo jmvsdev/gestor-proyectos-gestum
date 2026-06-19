@@ -22,7 +22,7 @@ const quickLinks = [
 
 export function SidebarPanel({ projectName, accentColor, phases, onPhaseChange }: SidebarPanelProps) {
   return (
-    <aside className="flex flex-col w-[264px] bg-[#fbfbfc] border-r border-gray-200 flex-shrink-0 min-h-0">
+    <aside className="hidden md:flex flex-col w-[264px] bg-[#fbfbfc] border-r border-gray-200 flex-shrink-0 min-h-0">
       {/* Header */}
       <div className="flex items-center px-4 pt-4 pb-3">
         <span className="text-[16px] font-bold text-[#272b36]">Inicio</span>

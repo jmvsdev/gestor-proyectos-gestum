@@ -94,10 +94,10 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
       {/* Read-only banner */}
       <div className="flex items-center gap-2 bg-amber-50 border-b border-amber-200 px-5 py-2 flex-shrink-0">
         <Eye size={15} className="text-amber-600 flex-shrink-0" />
-        <span className="text-[12.5px] font-semibold text-amber-800">Vista de solo lectura</span>
-        <span className="text-[12.5px] text-amber-700">—</span>
-        <span className="text-[12.5px] font-medium text-amber-800">{payload.projectName}</span>
-        <span className="ml-auto text-[11.5px] text-amber-600">Snapshot compartido · no se pueden hacer cambios</span>
+        <span className="text-[12.5px] font-semibold text-amber-800">Solo lectura</span>
+        <span className="hidden sm:inline text-[12.5px] text-amber-700">—</span>
+        <span className="hidden sm:inline text-[12.5px] font-medium text-amber-800">{payload.projectName}</span>
+        <span className="ml-auto text-[11.5px] text-amber-600 hidden sm:inline">Snapshot compartido · no se pueden hacer cambios</span>
       </div>
 
       {/* Phase selector */}
@@ -129,8 +129,8 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
       </div>
 
       {/* Tab selector + filter button */}
-      <div className="flex items-center px-5 bg-white border-b border-gray-200 flex-shrink-0">
-        <div className="flex items-center gap-0.5 flex-1">
+      <div className="flex items-center bg-white border-b border-gray-200 flex-shrink-0 overflow-hidden">
+        <div className="flex items-center gap-0.5 flex-1 overflow-x-auto scrollbar-none px-2 sm:px-5">
           {TABS.map(({ label, Icon }) => {
             const active = activeTab === label;
             return (
@@ -138,7 +138,7 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
                 key={label}
                 type="button"
                 onClick={() => setActiveTab(label)}
-                className="flex items-center gap-[6px] bg-transparent border-0 px-[11px] pb-[11px] pt-2 text-[13px] cursor-pointer transition-colors"
+                className="flex items-center gap-[6px] bg-transparent border-0 px-[11px] pb-[11px] pt-2 text-[13px] cursor-pointer transition-colors flex-shrink-0 whitespace-nowrap"
                 style={{
                   color: active ? ACCENT : '#8b909c',
                   fontWeight: active ? 600 : 500,
@@ -154,7 +154,7 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
 
         {/* Filters — hidden for Panel view (aggregate stats) */}
         {activeTab !== 'Panel' && (
-          <div className="flex-shrink-0 py-1.5">
+          <div className="flex-shrink-0 py-1.5 pr-2 sm:pr-5">
             <FilterPanel
               filters={filters}
               onFiltersChange={setFilters}

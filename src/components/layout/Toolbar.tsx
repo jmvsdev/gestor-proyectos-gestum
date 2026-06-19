@@ -19,7 +19,7 @@ export function Toolbar({
   filters, onFiltersChange, assignees, onAddTask,
 }: ToolbarProps) {
   return (
-    <div className="flex items-center gap-[10px] px-[18px] py-[10px] flex-shrink-0">
+    <div className="flex flex-wrap items-center gap-[10px] px-[18px] py-[10px] flex-shrink-0">
       <FilterPanel
         filters={filters}
         onFiltersChange={onFiltersChange}

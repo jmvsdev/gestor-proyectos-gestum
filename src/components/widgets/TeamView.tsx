@@ -46,7 +46,7 @@ export function TeamView({ tasks, assignees }: TeamViewProps) {
                   <p className="text-[14px] font-semibold text-[#272b36]">{assignee.name}</p>
                   <p className="text-[12px] text-[#9aa0ad]">{open} abiertas · {done} completadas</p>
                 </div>
-                <div className="flex gap-1.5">
+                <div className="hidden sm:flex flex-wrap gap-1.5">
                   {Object.entries(
                     assigneeTasks.reduce<Record<string, number>>((acc, t) => {
                       acc[t.status] = (acc[t.status] ?? 0) + 1;

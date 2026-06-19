@@ -57,7 +57,7 @@ export function ListView({ tasks, assignees, onTasksChange, onTaskClick, readOnl
 
   return (
     <div className="flex-1 overflow-auto min-h-0 px-[18px] py-4">
-      <table className="w-full border-collapse text-[13px]">
+      <table className="w-full border-collapse text-[13px] min-w-[640px]">
         <thead>
           <tr className="border-b border-[#e8eaee]">
             <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide w-[40%]">Tarea</th>

@@ -1,0 +1,143 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+      - generic "Juan Manuel Vargas" [ref=e9] [cursor=pointer]: JV
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: P
+            - generic [ref=e16]: Proyecto Hospital test
+          - button [ref=e17] [cursor=pointer]:
+            - img [ref=e18]
+        - generic [ref=e24]:
+          - button "Tablero" [ref=e25] [cursor=pointer]:
+            - img [ref=e26]
+            - text: Tablero
+          - button "Calendario" [ref=e31] [cursor=pointer]:
+            - img [ref=e32]
+            - text: Calendario
+          - button "Equipo" [ref=e34] [cursor=pointer]:
+            - img [ref=e35]
+            - text: Equipo
+          - button "Gantt" [ref=e40] [cursor=pointer]:
+            - img [ref=e41]
+            - text: Gantt
+          - button "Lista" [ref=e43] [cursor=pointer]:
+            - img [ref=e44]
+            - text: Lista
+          - button "Panel" [ref=e45] [cursor=pointer]:
+            - img [ref=e46]
+            - text: Panel
+      - generic [ref=e51]:
+        - button "Filtros" [ref=e53] [cursor=pointer]:
+          - img [ref=e54]
+          - text: Filtros
+        - button "Resetear datos" [ref=e56] [cursor=pointer]:
+          - img [ref=e57]
+          - text: Resetear datos
+        - button "Importar vista compartida" [ref=e60] [cursor=pointer]:
+          - img [ref=e61]
+          - text: Importar vista compartida
+        - button "Importar CSV" [ref=e63] [cursor=pointer]:
+          - img [ref=e64]
+          - text: Importar CSV
+        - button "Agregar tarjeta" [ref=e68] [cursor=pointer]:
+          - img [ref=e69]
+          - text: Agregar tarjeta
+      - generic [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]:
+              - generic [ref=e76]: Sin asignar
+              - generic [ref=e77]: "0"
+              - generic [ref=e78]: tareas
+            - generic [ref=e79]:
+              - generic [ref=e82]: En curso
+              - generic [ref=e83]: "10"
+              - generic [ref=e84]: tareas
+            - generic [ref=e85]:
+              - generic [ref=e88]: Completadas
+              - generic [ref=e89]: "0"
+              - generic [ref=e90]: tareas
+          - generic [ref=e91]:
+            - generic [ref=e92]: Carga de trabajo por estado
+            - application [ref=e95]:
+              - generic [ref=e101]:
+                - generic [ref=e103]: "10"
+                - generic [ref=e105]: "20"
+                - generic [ref=e107]: "30"
+                - generic [ref=e109]: "40"
+                - generic [ref=e111]: "50"
+                - generic [ref=e113]: "60"
+                - generic [ref=e115]: "70"
+                - generic [ref=e117]: "80"
+                - generic [ref=e119]: "95"
+            - generic [ref=e120]:
+              - generic [ref=e121]:
+                - generic [ref=e123]: Sin empezar
+                - generic [ref=e124]: "4"
+              - generic [ref=e125]:
+                - generic [ref=e127]: En curso
+                - generic [ref=e128]: "46"
+              - generic [ref=e129]:
+                - generic [ref=e131]: En revisión
+                - generic [ref=e132]: "14"
+              - generic [ref=e133]:
+                - generic [ref=e135]: Bloqueada
+                - generic [ref=e136]: "9"
+              - generic [ref=e137]:
+                - generic [ref=e139]: Por validar
+                - generic [ref=e140]: "22"
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - generic [ref=e143]: Total de tareas por persona asignada
+            - generic [ref=e144]:
+              - generic [ref=e145]:
+                - application [ref=e147]
+                - generic:
+                  - generic: "10"
+                  - generic: tareas
+              - generic [ref=e148]:
+                - generic [ref=e149]:
+                  - generic [ref=e151]: Juan Manuel Vargas
+                  - generic [ref=e152]: "3"
+                - generic [ref=e153]:
+                  - generic [ref=e155]: Ana Torres
+                  - generic [ref=e156]: "2"
+                - generic [ref=e157]:
+                  - generic [ref=e159]: Carlos Méndez
+                  - generic [ref=e160]: "2"
+                - generic [ref=e161]:
+                  - generic [ref=e163]: Lucía Fernández
+                  - generic [ref=e164]: "1"
+                - generic [ref=e165]:
+                  - generic [ref=e167]: Sin asignar
+                  - generic [ref=e168]: "2"
+          - generic [ref=e169]:
+            - generic [ref=e170]: Tareas abiertas por persona asignada
+            - generic [ref=e171]: Tareas
+            - application [ref=e174]:
+              - generic [ref=e178]:
+                - generic [ref=e179]:
+                  - generic [ref=e181]: Juan
+                  - generic [ref=e183]: Ana
+                  - generic [ref=e185]: Carlos
+                  - generic [ref=e187]: Lucía
+                  - generic [ref=e189]: —
+                - generic [ref=e190]:
+                  - generic [ref=e192]: "0"
+                  - generic [ref=e194]: "0.5"
+                  - generic [ref=e196]: "1"
+                  - generic [ref=e198]: "1.5"
+                  - generic [ref=e200]: "2"
+                  - generic [ref=e202]: "2.5"
+                  - generic [ref=e204]: "3"
+          - generic [ref=e205]:
+            - generic [ref=e206]: Tareas completadas esta semana
+            - generic [ref=e207]:
+              - img [ref=e208]
+              - generic [ref=e211]: No hay resultados.
+  - generic [ref=e212]: "0.5"

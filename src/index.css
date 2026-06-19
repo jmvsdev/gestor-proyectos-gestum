@@ -15,3 +15,6 @@ html, body, #root {
 ::-webkit-scrollbar-thumb { background: #cfd3dc; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
 ::-webkit-scrollbar-thumb:hover { background: #b4b9c6; background-clip: content-box; }
 ::-webkit-scrollbar-track { background: transparent; }
+
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
