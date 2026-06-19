@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import {
   Lock, Star,
   LayoutGrid, Calendar, Users, GanttChartSquare, List, LayoutDashboard,
@@ -6,7 +7,8 @@ import {
 import type { LucideIcon } from 'lucide-react';
 
 interface TopBarProps {
-  projectName: string;
+  /** Rendered in place of the project name — pass a <ProjectDropdown> */
+  projectSelector: ReactNode;
   accentColor: string;
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -28,7 +30,7 @@ const TABS: TabDef[] = [
   { label: 'Panel',      Icon: LayoutDashboard },
 ];
 
-export function TopBar({ projectName, accentColor, activeTab, onTabChange, activePhase, onShare }: TopBarProps) {
+export function TopBar({ projectSelector, accentColor, activeTab, onTabChange, activePhase, onShare }: TopBarProps) {
   return (
     <div className="flex flex-col flex-shrink-0">
       {/* Row 1: breadcrumb + Compartir */}
@@ -38,7 +40,7 @@ export function TopBar({ projectName, accentColor, activeTab, onTabChange, activ
             className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0"
             style={{ background: accentColor }}
           >P</div>
-          <span className="text-[14px] font-semibold text-[#272b36] truncate">{projectName}</span>
+          {projectSelector}
           <Lock size={12} strokeWidth={2} className="hidden sm:block text-[#9aa0ad] flex-shrink-0" />
           <span className="hidden sm:inline text-[#c3c7d0] text-[14px]">/</span>
           <LayoutDashboard size={15} strokeWidth={2} className="hidden sm:block flex-shrink-0" style={{ color: accentColor }} />

@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import Papa from 'papaparse';
 import { Upload } from 'lucide-react';
-import type { Task, Assignee, Phase } from '../../data/types';
+import type { Task, Phase, RawAssignee } from '../../data/types';
 
-export type RawAssignee = Omit<Assignee, 'totalTasks' | 'openTasks'>;
+export type { RawAssignee } from '../../data/types';
 
 interface CSVImporterProps {
   existingPhases: Phase[];

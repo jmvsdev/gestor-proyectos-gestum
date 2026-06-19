@@ -95,6 +95,32 @@ export function applyFilters(tasks: Task[], f: FilterState): Task[] {
   });
 }
 
+// ── Multi-project store ───────────────────────────────────────────────────────
+
+/** Assignee without computed task counts */
+export type RawAssignee = Omit<Assignee, 'totalTasks' | 'openTasks'>;
+
+/** Minimal phase definition stored per-project (taskCount + active are always computed) */
+export interface StoredPhase {
+  id: string;
+  name: string;
+  isImport?: boolean;
+}
+
+export interface StoredProject {
+  id: string;
+  name: string;
+  createdAt: string;
+  tasks: Task[];
+  phases: StoredPhase[];
+  assignees: RawAssignee[];
+}
+
+export interface ProjectStore {
+  activeProjectId: string;
+  projects: Record<string, StoredProject>;
+}
+
 export interface ProjectData {
   projectName: string;
   workspaceName: string;

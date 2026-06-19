@@ -10,66 +10,73 @@ import { CalendarView } from '../widgets/CalendarView';
 import { ListView } from '../widgets/ListView';
 import { TeamView } from '../widgets/TeamView';
 import { TaskFormModal } from '../widgets/TaskFormModal';
-import { CSVImporter, type RawAssignee } from '../widgets/CSVImporter';
+import { ProjectDropdown } from '../widgets/ProjectDropdown';
+import { CSVImporter } from '../widgets/CSVImporter';
 import { ShareModal } from '../ui/ShareModal';
-import { compressToBase64, downloadShareFile, MAX_B64_CHARS, type SharePayload } from '../../utils/share';
-import type { Assignee, FilterState, Phase, ProjectData, Task } from '../../data/types';
+import {
+  compressToBase64, downloadShareFile, MAX_B64_CHARS, type SharePayload,
+} from '../../utils/share';
+import type {
+  Assignee, FilterState, Phase, ProjectData, Task,
+  RawAssignee, StoredProject, ProjectStore, StoredPhase,
+} from '../../data/types';
 import { EMPTY_FILTERS, applyFilters } from '../../data/types';
 
 interface AppShellProps {
   data: ProjectData;
   onImportSharedView: () => void;
+  /** Non-null when App.tsx has parsed a shared-view file to import as a new project */
+  pendingImport?: SharePayload | null;
+  onPendingImportDone?: () => void;
 }
 
-// ── localStorage helpers ──────────────────────────────────────────────────────
+// ── Storage version ───────────────────────────────────────────────────────────
 
-const STORAGE_VERSION = '3';
+const STORAGE_VERSION = '4';
 
-function checkStorageVersion() {
-  if (localStorage.getItem('pm-version') !== STORAGE_VERSION) {
-    ['pm-tasks', 'pm-extra-assignees', 'pm-extra-phases'].forEach(k => localStorage.removeItem(k));
-    localStorage.setItem('pm-version', STORAGE_VERSION);
-  }
+// ── Base project template ─────────────────────────────────────────────────────
+
+const BASE_PHASES: StoredPhase[] = [
+  { id: 'f1',     name: 'Fase 1 – Planeación' },
+  { id: 'f2',     name: 'Fase 2 – Licitación y Compras' },
+  { id: 'f3',     name: 'Fase 3 – Obra Civil' },
+  { id: 'f4',     name: 'Fase 4 – Instalación y Pruebas' },
+  { id: 'f5',     name: 'Fase 5 – Capacitación y Arranque' },
+  { id: 'import', name: 'Spreadsheet Import', isImport: true },
+];
+
+function getBasePhases(): StoredPhase[] {
+  return BASE_PHASES.map(p => ({ ...p }));
 }
+
+function getBaseAssignees(data: ProjectData): RawAssignee[] {
+  return data.assignees.map(({ totalTasks: _t, openTasks: _o, ...a }) => a);
+}
+
+// ── Validation helpers ────────────────────────────────────────────────────────
 
 const VALID_STATUSES = new Set<string>([
-  'sin-empezar','en-curso','en-revision','bloqueada','por-validar','completada',
+  'sin-empezar', 'en-curso', 'en-revision', 'bloqueada', 'por-validar', 'completada',
 ]);
 
 function isValidTask(t: unknown): t is Task {
   if (typeof t !== 'object' || t === null) return false;
   const o = t as Record<string, unknown>;
   return (
-    typeof o.id     === 'string' && o.id.length > 0 &&
-    typeof o.title  === 'string' && o.title.length > 0 &&
+    typeof o.id      === 'string' && o.id.length > 0 &&
+    typeof o.title   === 'string' && o.title.length > 0 &&
     typeof o.phaseId === 'string' && o.phaseId.length > 0 &&
-    typeof o.status === 'string' && VALID_STATUSES.has(o.status)
+    typeof o.status  === 'string' && VALID_STATUSES.has(o.status)
   );
 }
 
-function readStorage<T>(key: string, fallback: T, validate?: (v: unknown) => boolean): T {
-  try {
-    const raw = localStorage.getItem(key);
-    if (!raw) return fallback;
-    const parsed: unknown = JSON.parse(raw);
-    if (validate && !validate(parsed)) {
-      console.warn(`[PM] "${key}" corrupted — resetting.`);
-      localStorage.removeItem(key);
-      return fallback;
-    }
-    return parsed as T;
-  } catch {
-    console.warn(`[PM] "${key}" parse error — resetting.`);
-    localStorage.removeItem(key);
-    return fallback;
-  }
+function isValidStore(s: unknown): s is ProjectStore {
+  if (typeof s !== 'object' || s === null) return false;
+  const o = s as Record<string, unknown>;
+  return typeof o.activeProjectId === 'string' && typeof o.projects === 'object' && o.projects !== null;
 }
 
-function saveStorage(key: string, value: unknown) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* quota exceeded */ }
-}
-
-// ── Merge helpers ─────────────────────────────────────────────────────────────
+// ── Merge helper ──────────────────────────────────────────────────────────────
 
 function mergeById<T extends { id: string }>(existing: T[], incoming: T[]): T[] {
   const map = new Map(existing.map(item => [item.id, item]));
@@ -77,46 +84,131 @@ function mergeById<T extends { id: string }>(existing: T[], incoming: T[]): T[] 
   return [...map.values()];
 }
 
+// ── Project factory ───────────────────────────────────────────────────────────
+
+function makeProjectId() {
+  return `proj-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+}
+
+function createProject(
+  name: string,
+  phases: StoredPhase[],
+  assignees: RawAssignee[],
+  tasks: Task[],
+): StoredProject {
+  return { id: makeProjectId(), name, createdAt: new Date().toISOString(), tasks, phases, assignees };
+}
+
+// ── Load / migrate from localStorage ─────────────────────────────────────────
+
+function loadOrMigrate(data: ProjectData): ProjectStore {
+  const storedVersion = localStorage.getItem('pm-version');
+
+  // Try to read new format first
+  if (storedVersion === STORAGE_VERSION) {
+    try {
+      const raw = localStorage.getItem('pm-projects');
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (isValidStore(parsed)) return parsed;
+      }
+    } catch { /* fall through to migration */ }
+  }
+
+  // Migration from v3 → v4 (or fresh start)
+  let migratedTasks: Task[] = data.tasks;
+  let migratedAssignees: RawAssignee[] = getBaseAssignees(data);
+  let migratedPhases: StoredPhase[] = getBasePhases();
+
+  if (storedVersion === '3') {
+    try {
+      const oldTasks: unknown = JSON.parse(localStorage.getItem('pm-tasks') ?? 'null');
+      if (Array.isArray(oldTasks) && (oldTasks as unknown[]).every(isValidTask)) {
+        migratedTasks = oldTasks as Task[];
+      }
+    } catch { /* ignore */ }
+    try {
+      const oldExtra: unknown = JSON.parse(localStorage.getItem('pm-extra-assignees') ?? 'null');
+      if (Array.isArray(oldExtra)) {
+        migratedAssignees = mergeById(migratedAssignees, oldExtra as RawAssignee[]);
+      }
+    } catch { /* ignore */ }
+    try {
+      const oldPhases: unknown = JSON.parse(localStorage.getItem('pm-extra-phases') ?? 'null');
+      if (Array.isArray(oldPhases)) {
+        const extras = (oldPhases as Array<Record<string, unknown>>).map(p => ({
+          id: String(p.id ?? ''),
+          name: String(p.name ?? ''),
+          ...(p.isImport ? { isImport: true as const } : {}),
+        })).filter(p => p.id && p.name);
+        migratedPhases = mergeById(migratedPhases, extras);
+      }
+    } catch { /* ignore */ }
+  }
+
+  // Clean up old keys
+  ['pm-tasks', 'pm-extra-assignees', 'pm-extra-phases'].forEach(k => localStorage.removeItem(k));
+
+  const firstProject = createProject(data.projectName, migratedPhases, migratedAssignees, migratedTasks);
+  const newStore: ProjectStore = {
+    activeProjectId: firstProject.id,
+    projects: { [firstProject.id]: firstProject },
+  };
+
+  try {
+    localStorage.setItem('pm-version', STORAGE_VERSION);
+    localStorage.setItem('pm-projects', JSON.stringify(newStore));
+  } catch { /* quota exceeded */ }
+
+  return newStore;
+}
+
+// ── Open statuses ─────────────────────────────────────────────────────────────
+
 const OPEN_STATUSES: Task['status'][] = [
-  'sin-empezar','en-curso','en-revision','bloqueada','por-validar',
+  'sin-empezar', 'en-curso', 'en-revision', 'bloqueada', 'por-validar',
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function AppShell({ data, onImportSharedView }: AppShellProps) {
-  const [activeTab, setActiveTab]         = useState('Panel');
-  const [importResult, setImportResult]   = useState<string | null>(null);
+export function AppShell({ data, onImportSharedView, pendingImport, onPendingImportDone }: AppShellProps) {
+  // ── UI state ─────────────────────────────────────────────────────────────────
+  const [activeTab, setActiveTab]           = useState('Panel');
+  const [importResult, setImportResult]     = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [shareUrl, setShareUrl]           = useState<string | null>(null);
-  const [filters, setFilters]             = useState<FilterState>(EMPTY_FILTERS);
-  const [showTaskForm, setShowTaskForm]   = useState(false);
-  const [selectedTask, setSelectedTask]   = useState<Task | null>(null);
+  const [shareUrl, setShareUrl]             = useState<string | null>(null);
+  const [filters, setFilters]               = useState<FilterState>(EMPTY_FILTERS);
+  const [showTaskForm, setShowTaskForm]     = useState(false);
+  const [selectedTask, setSelectedTask]     = useState<Task | null>(null);
 
-  const [tasks, setTasks] = useState<Task[]>(() => {
-    checkStorageVersion();
-    return readStorage('pm-tasks', data.tasks, v => Array.isArray(v) && (v as unknown[]).every(isValidTask));
+  // ── Project store ─────────────────────────────────────────────────────────────
+  const [store, setStore] = useState<ProjectStore>(() => loadOrMigrate(data));
+
+  const activeProject: StoredProject | undefined = store.projects[store.activeProjectId];
+
+  const [activePhaseId, setActivePhaseId] = useState<string>(() => {
+    const phases = activeProject?.phases ?? [];
+    return phases.find(p => !p.isImport)?.id ?? phases[0]?.id ?? 'f1';
   });
 
-  const [extraAssignees, setExtraAssignees] = useState<RawAssignee[]>(() =>
-    readStorage('pm-extra-assignees', [], Array.isArray)
-  );
+  const { workspaceName, accentColor, currentUser } = data;
 
-  const [extraPhases, setExtraPhases] = useState<Phase[]>(() =>
-    readStorage('pm-extra-phases', [], Array.isArray)
-  );
+  // ── Helper: update only the active project ────────────────────────────────────
+  function updateActiveProject(updater: (p: StoredProject) => StoredProject) {
+    setStore(prev => ({
+      ...prev,
+      projects: {
+        ...prev.projects,
+        [prev.activeProjectId]: updater(prev.projects[prev.activeProjectId]),
+      },
+    }));
+  }
 
-  const [activePhaseId, setActivePhaseId] = useState<string>(
-    data.phases.find(p => p.active)?.id ?? data.phases[0]?.id ?? 'f1'
-  );
+  // ── Derived state ─────────────────────────────────────────────────────────────
 
-  const { projectName, workspaceName, accentColor, kpis, workload, currentUser } = data;
-
-  // ── Derived state ───────────────────────────────────────────────────────────
-
-  const rawAssigneesForImport = useMemo<RawAssignee[]>(() => {
-    const base: RawAssignee[] = data.assignees.map(({ totalTasks: _t, openTasks: _o, ...a }) => a);
-    return mergeById(base, extraAssignees);
-  }, [data.assignees, extraAssignees]);
+  const tasks                = useMemo(() => activeProject?.tasks      ?? [], [activeProject]);
+  const rawPhases            = useMemo(() => activeProject?.phases     ?? [], [activeProject]);
+  const rawAssigneesForImport = useMemo(() => activeProject?.assignees ?? [], [activeProject]);
 
   const allAssignees: Assignee[] = useMemo(() =>
     rawAssigneesForImport.map(a => ({
@@ -131,18 +223,13 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
     [rawAssigneesForImport, tasks]
   );
 
-  const allBasePhases = useMemo(() => {
-    const baseIds = new Set(data.phases.map(p => p.id));
-    return [...data.phases, ...extraPhases.filter(p => !baseIds.has(p.id))];
-  }, [data.phases, extraPhases]);
-
-  const dynamicPhases = useMemo(
-    () => allBasePhases.map(p => ({
+  const dynamicPhases: Phase[] = useMemo(() =>
+    rawPhases.map(p => ({
       ...p,
       taskCount: tasks.filter(t => t.phaseId === p.id).length,
       active: p.id === activePhaseId,
     })),
-    [allBasePhases, tasks, activePhaseId]
+    [rawPhases, tasks, activePhaseId]
   );
 
   const phaseTasks = useMemo(
@@ -150,26 +237,39 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
     [tasks, activePhaseId]
   );
 
-  // Filtered tasks — passed to all task-list views (Tablero, Gantt, Calendario, Lista, Equipo)
   const filteredTasks = useMemo(
     () => applyFilters(phaseTasks, filters),
     [phaseTasks, filters]
   );
 
-  // IDs of visible tasks, needed to reconcile partial updates from views
   const filteredTaskIds = useMemo(
     () => new Set(filteredTasks.map(t => t.id)),
     [filteredTasks]
   );
 
-  const activePhase = dynamicPhases.find(p => p.active)?.name ?? '';
-  const completedThisWeek = phaseTasks.filter(t => t.status === 'completada').length;
+  const activePhase        = dynamicPhases.find(p => p.active)?.name ?? '';
+  const completedThisWeek  = phaseTasks.filter(t => t.status === 'completada').length;
 
-  // ── Persistence effects ─────────────────────────────────────────────────────
+  // Compute KPIs + workload from active project tasks (all phases)
+  const kpis = useMemo(() => [
+    { label: 'Sin asignar',  value: tasks.filter(t => !t.assigneeId).length,              color: '#9aa3b2' },
+    { label: 'En curso',     value: tasks.filter(t => t.status === 'en-curso').length,    color: accentColor },
+    { label: 'Completadas',  value: tasks.filter(t => t.status === 'completada').length,  color: '#1f9d63' },
+  ], [tasks, accentColor]);
 
-  useEffect(() => { saveStorage('pm-tasks', tasks); }, [tasks]);
-  useEffect(() => { saveStorage('pm-extra-assignees', extraAssignees); }, [extraAssignees]);
-  useEffect(() => { saveStorage('pm-extra-phases', extraPhases); }, [extraPhases]);
+  const workload = useMemo(() => [
+    { label: 'Sin empezar', value: tasks.filter(t => t.status === 'sin-empezar').length, color: '#9aa3b2' },
+    { label: 'En curso',    value: tasks.filter(t => t.status === 'en-curso').length,    color: accentColor },
+    { label: 'En revisión', value: tasks.filter(t => t.status === 'en-revision').length, color: '#f97316' },
+    { label: 'Bloqueada',   value: tasks.filter(t => t.status === 'bloqueada').length,   color: '#ef4444' },
+    { label: 'Por validar', value: tasks.filter(t => t.status === 'por-validar').length, color: '#b58aa6' },
+  ], [tasks, accentColor]);
+
+  // ── Persistence ───────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    try { localStorage.setItem('pm-projects', JSON.stringify(store)); } catch { /* quota */ }
+  }, [store]);
 
   useEffect(() => {
     if (!importResult) return;
@@ -177,70 +277,149 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
     return () => clearTimeout(t);
   }, [importResult]);
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
+  // ── Handle file-imported shared project from App.tsx ──────────────────────────
+
+  useEffect(() => {
+    if (!pendingImport) return;
+    handleImportProject(pendingImport);
+    onPendingImportDone?.();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingImport]);
+
+  // ── Task handlers ─────────────────────────────────────────────────────────────
 
   function handleReset() {
-    ['pm-tasks', 'pm-extra-assignees', 'pm-extra-phases'].forEach(k => localStorage.removeItem(k));
-    localStorage.setItem('pm-version', STORAGE_VERSION);
-    setTasks(data.tasks);
-    setExtraAssignees([]);
-    setExtraPhases([]);
+    updateActiveProject(p => ({ ...p, tasks: [] }));
     setFilters(EMPTY_FILTERS);
   }
 
-  // Views receive filteredTasks. When they call onTasksChange we merge the update
-  // back: keep tasks from other phases + hidden (filtered-out) phase tasks + updated visible tasks.
   function handleViewTasksChange(updatedVisible: Task[]) {
-    setTasks(prev => [
-      ...prev.filter(t => t.phaseId !== activePhaseId),
-      ...prev.filter(t => t.phaseId === activePhaseId && !filteredTaskIds.has(t.id)),
-      ...updatedVisible,
-    ]);
+    updateActiveProject(p => ({
+      ...p,
+      tasks: [
+        ...p.tasks.filter(t => t.phaseId !== activePhaseId),
+        ...p.tasks.filter(t => t.phaseId === activePhaseId && !filteredTaskIds.has(t.id)),
+        ...updatedVisible,
+      ],
+    }));
   }
 
   function handleImport(newTasks: Task[], newAssignees: RawAssignee[], newPhases: Phase[]) {
-    setTasks(prev => mergeById(prev, newTasks));
-    setExtraAssignees(prev => mergeById(prev, newAssignees));
-    setExtraPhases(prev => mergeById(prev, newPhases));
+    updateActiveProject(p => ({
+      ...p,
+      tasks:     mergeById(p.tasks,     newTasks),
+      assignees: mergeById(p.assignees, newAssignees),
+      phases:    mergeById(p.phases,    newPhases.map(({ taskCount: _t, active: _a, ...ph }) => ph)),
+    }));
   }
 
   function handleAddTask(task: Task) {
-    setTasks(prev => [...prev, task]);
+    updateActiveProject(p => ({ ...p, tasks: [...p.tasks, task] }));
     setShowTaskForm(false);
     if (task.phaseId !== activePhaseId) setActivePhaseId(task.phaseId);
   }
 
   function handleEditTask(updated: Task) {
-    setTasks(prev => prev.map(t => t.id === updated.id ? updated : t));
+    updateActiveProject(p => ({
+      ...p,
+      tasks: p.tasks.map(t => t.id === updated.id ? updated : t),
+    }));
     setSelectedTask(null);
     if (updated.phaseId !== activePhaseId) setActivePhaseId(updated.phaseId);
   }
 
   function handleDeleteTask(taskId: string) {
-    setTasks(prev => prev.filter(t => t.id !== taskId));
+    updateActiveProject(p => ({ ...p, tasks: p.tasks.filter(t => t.id !== taskId) }));
     setSelectedTask(null);
   }
 
   async function handleShare() {
     const payload: SharePayload = {
       version: 1,
-      projectName,
+      projectName: activeProject?.name ?? 'Proyecto',
       tasks,
       phases: dynamicPhases,
       assignees: rawAssigneesForImport,
     };
     const json = JSON.stringify(payload);
-    const b64 = await compressToBase64(json);
-    if (b64.length <= MAX_B64_CHARS) {
-      const url = `${window.location.origin}${window.location.pathname}#shared=${b64}`;
-      setShareUrl(url);
-    } else {
-      setShareUrl(null);
-    }
+    const b64  = await compressToBase64(json);
+    setShareUrl(
+      b64.length <= MAX_B64_CHARS
+        ? `${window.location.origin}${window.location.pathname}#shared=${b64}`
+        : null
+    );
     setShowShareModal(true);
   }
 
-  // ── Render ──────────────────────────────────────────────────────────────────
+  // ── Project CRUD ──────────────────────────────────────────────────────────────
+
+  function switchToProject(id: string) {
+    setStore(prev => ({ ...prev, activeProjectId: id }));
+    const project = store.projects[id];
+    const firstId = project?.phases.find(p => !p.isImport)?.id ?? project?.phases[0]?.id ?? 'f1';
+    setActivePhaseId(firstId);
+    setFilters(EMPTY_FILTERS);
+    setActiveTab('Panel');
+  }
+
+  function handleCreateProject(name: string) {
+    const np = createProject(name, getBasePhases(), getBaseAssignees(data), []);
+    setStore(prev => ({
+      activeProjectId: np.id,
+      projects: { ...prev.projects, [np.id]: np },
+    }));
+    setActivePhaseId(np.phases[0].id);
+    setFilters(EMPTY_FILTERS);
+    setActiveTab('Panel');
+  }
+
+  function handleDeleteProject(id: string) {
+    const remaining = Object.keys(store.projects).filter(k => k !== id);
+    if (remaining.length === 0) {
+      // Last project deleted — create a fresh default
+      const np = createProject(data.projectName, getBasePhases(), getBaseAssignees(data), []);
+      setStore({ activeProjectId: np.id, projects: { [np.id]: np } });
+      setActivePhaseId(np.phases[0].id);
+      setFilters(EMPTY_FILTERS);
+      setActiveTab('Panel');
+      return;
+    }
+    const newActiveId = id === store.activeProjectId ? remaining[0] : store.activeProjectId;
+    setStore(prev => {
+      const { [id]: _removed, ...rest } = prev.projects;
+      return { activeProjectId: newActiveId, projects: rest };
+    });
+    if (id === store.activeProjectId) {
+      const newActive = store.projects[remaining[0]];
+      const firstId = newActive?.phases.find(p => !p.isImport)?.id ?? newActive?.phases[0]?.id ?? 'f1';
+      setActivePhaseId(firstId);
+      setFilters(EMPTY_FILTERS);
+      setActiveTab('Panel');
+    }
+  }
+
+  function handleRenameProject(id: string, name: string) {
+    setStore(prev => ({
+      ...prev,
+      projects: { ...prev.projects, [id]: { ...prev.projects[id], name } },
+    }));
+  }
+
+  function handleImportProject(payload: SharePayload) {
+    const phases: StoredPhase[] = payload.phases.map(({ taskCount: _t, active: _a, ...p }) => p);
+    const np = createProject(payload.projectName, phases, payload.assignees, payload.tasks);
+    setStore(prev => ({
+      activeProjectId: np.id,
+      projects: { ...prev.projects, [np.id]: np },
+    }));
+    const firstId = phases.find(p => !p.isImport)?.id ?? phases[0]?.id ?? 'f1';
+    setActivePhaseId(firstId);
+    setFilters(EMPTY_FILTERS);
+    setActiveTab('Panel');
+    setImportResult(`✅ Proyecto “${np.name}” importado y activado.`);
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────────
 
   return (
     <div className="flex flex-col h-screen overflow-hidden text-[#272b36] bg-[#f6f7f9]" style={{ fontSize: 13, lineHeight: 1.45 }}>
@@ -248,7 +427,7 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
 
       <div className="flex flex-1 min-h-0">
         <SidebarPanel
-          projectName={projectName}
+          projectName={activeProject?.name ?? ''}
           accentColor={accentColor}
           phases={dynamicPhases}
           activePhaseId={activePhaseId}
@@ -257,7 +436,17 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
 
         <main className="flex flex-col flex-1 min-w-0 min-h-0 bg-[#f6f7f9]">
           <TopBar
-            projectName={projectName}
+            projectSelector={
+              <ProjectDropdown
+                projects={store.projects}
+                activeProjectId={store.activeProjectId}
+                accentColor={accentColor}
+                onSwitch={switchToProject}
+                onCreate={handleCreateProject}
+                onDelete={handleDeleteProject}
+                onRename={handleRenameProject}
+              />
+            }
             accentColor={accentColor}
             activeTab={activeTab}
             onTabChange={setActiveTab}
@@ -336,10 +525,10 @@ export function AppShell({ data, onImportSharedView }: AppShellProps) {
       {showShareModal && (
         <ShareModal
           url={shareUrl}
-          projectName={projectName}
+          projectName={activeProject?.name ?? 'Proyecto'}
           onDownload={() => downloadShareFile({
             version: 1,
-            projectName,
+            projectName: activeProject?.name ?? 'Proyecto',
             tasks,
             phases: dynamicPhases,
             assignees: rawAssigneesForImport,

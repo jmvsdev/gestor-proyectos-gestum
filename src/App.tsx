@@ -6,11 +6,17 @@ import { decompressFromBase64, type SharePayload } from './utils/share';
 
 export default function App() {
   const { data, loading, error } = useProjectData();
+
+  // #shared= URL hash → read-only client view (unchanged)
   const [readOnlyPayload, setReadOnlyPayload] = useState<SharePayload | null>(null);
-  const [readOnlyError, setReadOnlyError] = useState<string | null>(null);
+  const [readOnlyError, setReadOnlyError]     = useState<string | null>(null);
+
+  // File import → create a new project in the store (new behaviour)
+  const [pendingImport, setPendingImport]     = useState<SharePayload | null>(null);
+
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Detect #shared=<base64> hash on mount
+  // Detect #shared=<base64> hash on mount → open ReadOnlyShell
   useEffect(() => {
     const hash = window.location.hash;
     if (!hash.startsWith('#shared=')) return;
@@ -20,7 +26,7 @@ export default function App() {
       .catch(() => setReadOnlyError('El enlace no es válido o está dañado.'));
   }, []);
 
-  // Handle "Importar vista compartida" file
+  // "Importar vista compartida" file handler — imports as new project
   function handleShareFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -28,9 +34,11 @@ export default function App() {
       try {
         const payload = JSON.parse(text) as SharePayload;
         if (!payload.version || !payload.tasks) throw new Error('formato inválido');
-        setReadOnlyPayload(payload);
+        setPendingImport(payload);
       } catch {
-        setReadOnlyError('El archivo no tiene el formato esperado.');
+        // Show a brief error toast via the AppShell — not possible directly,
+        // so just alert for now (rare path; file usually valid)
+        alert('El archivo no tiene el formato esperado.');
       }
     });
     e.target.value = '';
@@ -73,7 +81,6 @@ export default function App() {
 
   return (
     <>
-      {/* Hidden file input for "Importar vista compartida" */}
       <input
         ref={fileRef}
         type="file"
@@ -82,7 +89,12 @@ export default function App() {
         aria-label="Importar vista compartida"
         onChange={handleShareFile}
       />
-      <AppShell data={data} onImportSharedView={() => fileRef.current?.click()} />
+      <AppShell
+        data={data}
+        onImportSharedView={() => fileRef.current?.click()}
+        pendingImport={pendingImport}
+        onPendingImportDone={() => setPendingImport(null)}
+      />
     </>
   );
 }
