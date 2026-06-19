@@ -1,0 +1,409 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G Gestum" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+        - generic [ref=e8]: Gestum
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - button "Atrás" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button "Adelante" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - generic [ref=e22]: Buscar
+        - generic [ref=e23]: Ctrl J
+      - generic "Juan Manuel Vargas" [ref=e25] [cursor=pointer]: JV
+    - generic [ref=e26]:
+      - complementary [ref=e27]:
+        - generic [ref=e29]: Inicio
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - button "Respuestas" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Respuestas
+            - button "Comentarios asignados" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Comentarios asignados
+            - button "Mis tareas" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+              - text: Mis tareas
+            - button "Más" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - text: Más
+          - generic [ref=e49]:
+            - generic [ref=e50]: Espacios
+            - button "Agregar espacio" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+          - button "✳ Todas las tareas - Gestum" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: ✳
+            - generic [ref=e55]: Todas las tareas - Gestum
+          - button "P Proyecto Hospital test" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: P
+            - generic [ref=e60]: Proyecto Hospital test
+            - img [ref=e61]
+          - generic [ref=e64]:
+            - button "Fase 1 – Planeación 10" [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e69]: Fase 1 – Planeación
+              - generic [ref=e70]: "10"
+            - button "Fase 2 – Licitación y Compras" [ref=e71] [cursor=pointer]:
+              - img [ref=e72]
+              - generic [ref=e75]: Fase 2 – Licitación y Compras
+            - button "Fase 3 – Obra Civil" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - generic [ref=e80]: Fase 3 – Obra Civil
+            - button "Fase 4 – Instalación y Pruebas" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - generic [ref=e85]: Fase 4 – Instalación y Pruebas
+            - button "Fase 5 – Capacitación y Arranque" [ref=e86] [cursor=pointer]:
+              - img [ref=e87]
+              - generic [ref=e90]: Fase 5 – Capacitación y Arranque
+            - button "Spreadsheet Import" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - generic [ref=e94]: Spreadsheet Import
+            - button "Nuevo espacio" [ref=e95] [cursor=pointer]:
+              - img [ref=e96]
+              - generic [ref=e97]: Nuevo espacio
+      - main [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: P
+              - generic [ref=e103]: Proyecto Hospital test
+              - img [ref=e104]
+              - generic [ref=e107]: /
+              - img [ref=e108]
+              - generic [ref=e113]: Fase 1 – Planeación
+              - img [ref=e114] [cursor=pointer]
+            - button "Compartir" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - text: Compartir
+          - generic [ref=e123]:
+            - button "Tablero" [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - text: Tablero
+            - button "Calendario" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - text: Calendario
+            - button "Equipo" [ref=e133] [cursor=pointer]:
+              - img [ref=e134]
+              - text: Equipo
+            - button "Gantt" [ref=e139] [cursor=pointer]:
+              - img [ref=e140]
+              - text: Gantt
+            - button "Lista" [ref=e142] [cursor=pointer]:
+              - img [ref=e143]
+              - text: Lista
+            - button "Panel" [ref=e144] [cursor=pointer]:
+              - img [ref=e145]
+              - text: Panel
+        - generic [ref=e150]:
+          - button "Filtros" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]
+            - text: Filtros
+          - button "Resetear datos" [ref=e155] [cursor=pointer]:
+            - img [ref=e156]
+            - text: Resetear datos
+          - button "Importar vista compartida" [ref=e159] [cursor=pointer]:
+            - img [ref=e160]
+            - text: Importar vista compartida
+          - button "Importar CSV" [ref=e162] [cursor=pointer]:
+            - img [ref=e163]
+            - text: Importar CSV
+          - button "Agregar tarjeta" [ref=e167] [cursor=pointer]:
+            - img [ref=e168]
+            - text: Agregar tarjeta
+        - table [ref=e352]:
+          - rowgroup [ref=e353]:
+            - row "Tarea Asignado Estado Prioridad Inicio Vence" [ref=e354]:
+              - columnheader "Tarea" [ref=e355]
+              - columnheader "Asignado" [ref=e356]
+              - columnheader "Estado" [ref=e357]
+              - columnheader "Prioridad" [ref=e358]
+              - columnheader "Inicio" [ref=e359]
+              - columnheader "Vence" [ref=e360]
+          - rowgroup [ref=e361]:
+            - row "Definir alcance del proyecto JM Juan En curso Alta jun. 1 jun. 20" [ref=e362]:
+              - cell "Definir alcance del proyecto" [ref=e363] [cursor=pointer]:
+                - generic [ref=e365]: Definir alcance del proyecto
+              - cell "JM Juan" [ref=e366]:
+                - generic [ref=e367]:
+                  - generic [ref=e368]: JM
+                  - generic [ref=e369]: Juan
+              - cell "En curso" [ref=e370]:
+                - combobox [ref=e371] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso" [selected]
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Alta" [ref=e372]:
+                - generic [ref=e373]:
+                  - img [ref=e374]
+                  - text: Alta
+              - cell "jun. 1" [ref=e376]
+              - cell "jun. 20" [ref=e377]
+            - row "Levantamiento de requerimientos equipos AT Ana En curso Alta jun. 5 jun. 22" [ref=e378]:
+              - cell "Levantamiento de requerimientos equipos" [ref=e379] [cursor=pointer]:
+                - generic [ref=e380]:
+                  - generic [ref=e381]: Levantamiento de requerimientos
+                  - generic [ref=e382]: equipos
+              - cell "AT Ana" [ref=e383]:
+                - generic [ref=e384]:
+                  - generic [ref=e385]: AT
+                  - generic [ref=e386]: Ana
+              - cell "En curso" [ref=e387]:
+                - combobox [ref=e388] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso" [selected]
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Alta" [ref=e389]:
+                - generic [ref=e390]:
+                  - img [ref=e391]
+                  - text: Alta
+              - cell "jun. 5" [ref=e393]
+              - cell "jun. 22" [ref=e394]
+            - row "Plan de trabajo Fase 1 CM Carlos En revisión Normal jun. 8 jun. 19" [ref=e395]:
+              - cell "Plan de trabajo Fase 1" [ref=e396] [cursor=pointer]:
+                - generic [ref=e398]: Plan de trabajo Fase 1
+              - cell "CM Carlos" [ref=e399]:
+                - generic [ref=e400]:
+                  - generic [ref=e401]: CM
+                  - generic [ref=e402]: Carlos
+              - cell "En revisión" [ref=e403]:
+                - combobox [ref=e404] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión" [selected]
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Normal" [ref=e405]:
+                - generic [ref=e406]:
+                  - img [ref=e407]
+                  - text: Normal
+              - cell "jun. 8" [ref=e409]
+              - cell "jun. 19" [ref=e410]
+            - row "Validación con dirección LF Lucía Bloqueada Urgente jun. 10 jun. 18" [ref=e411]:
+              - cell "Validación con dirección" [ref=e412] [cursor=pointer]:
+                - generic [ref=e414]: Validación con dirección
+              - cell "LF Lucía" [ref=e415]:
+                - generic [ref=e416]:
+                  - generic [ref=e417]: LF
+                  - generic [ref=e418]: Lucía
+              - cell "Bloqueada" [ref=e419]:
+                - combobox [ref=e420] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión"
+                  - option "Bloqueada" [selected]
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Urgente" [ref=e421]:
+                - generic [ref=e422]:
+                  - img [ref=e423]
+                  - text: Urgente
+              - cell "jun. 10" [ref=e425]
+              - cell "jun. 18" [ref=e426]
+            - row "Análisis de riesgos JM Juan Por validar Alta jun. 12 jun. 25" [ref=e427]:
+              - cell "Análisis de riesgos" [ref=e428] [cursor=pointer]:
+                - generic [ref=e430]: Análisis de riesgos
+              - cell "JM Juan" [ref=e431]:
+                - generic [ref=e432]:
+                  - generic [ref=e433]: JM
+                  - generic [ref=e434]: Juan
+              - cell "Por validar" [ref=e435]:
+                - combobox [ref=e436] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar" [selected]
+                  - option "Completada"
+              - cell "Alta" [ref=e437]:
+                - generic [ref=e438]:
+                  - img [ref=e439]
+                  - text: Alta
+              - cell "jun. 12" [ref=e441]
+              - cell "jun. 25" [ref=e442]
+            - row "Definir proveedores clave licitación JM Juan En curso Normal jun. 15 jun. 24" [ref=e443]:
+              - cell "Definir proveedores clave licitación" [ref=e444] [cursor=pointer]:
+                - generic [ref=e445]:
+                  - generic [ref=e446]: Definir proveedores clave
+                  - generic [ref=e447]: licitación
+              - cell "JM Juan" [ref=e448]:
+                - generic [ref=e449]:
+                  - generic [ref=e450]: JM
+                  - generic [ref=e451]: Juan
+              - cell "En curso" [ref=e452]:
+                - combobox [ref=e453] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso" [selected]
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Normal" [ref=e454]:
+                - generic [ref=e455]:
+                  - img [ref=e456]
+                  - text: Normal
+              - cell "jun. 15" [ref=e458]
+              - cell "jun. 24" [ref=e459]
+            - row "Cronograma general del proyecto AT Ana En curso Alta jun. 2 jun. 21" [ref=e460]:
+              - cell "Cronograma general del proyecto" [ref=e461] [cursor=pointer]:
+                - generic [ref=e463]: Cronograma general del proyecto
+              - cell "AT Ana" [ref=e464]:
+                - generic [ref=e465]:
+                  - generic [ref=e466]: AT
+                  - generic [ref=e467]: Ana
+              - cell "En curso" [ref=e468]:
+                - combobox [ref=e469] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso" [selected]
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Alta" [ref=e470]:
+                - generic [ref=e471]:
+                  - img [ref=e472]
+                  - text: Alta
+              - cell "jun. 2" [ref=e474]
+              - cell "jun. 21" [ref=e475]
+            - row "Presupuesto inicial CM Carlos En revisión Normal jun. 8 jun. 20" [ref=e476]:
+              - cell "Presupuesto inicial" [ref=e477] [cursor=pointer]:
+                - generic [ref=e479]: Presupuesto inicial
+              - cell "CM Carlos" [ref=e480]:
+                - generic [ref=e481]:
+                  - generic [ref=e482]: CM
+                  - generic [ref=e483]: Carlos
+              - cell "En revisión" [ref=e484]:
+                - combobox [ref=e485] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión" [selected]
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Normal" [ref=e486]:
+                - generic [ref=e487]:
+                  - img [ref=e488]
+                  - text: Normal
+              - cell "jun. 8" [ref=e490]
+              - cell "jun. 20" [ref=e491]
+            - row "Identificar stakeholders clave — Por validar Baja jun. 18 jun. 26" [ref=e492]:
+              - cell "Identificar stakeholders clave" [ref=e493] [cursor=pointer]:
+                - generic [ref=e495]: Identificar stakeholders clave
+              - cell "—" [ref=e496]
+              - cell "Por validar" [ref=e497]:
+                - combobox [ref=e498] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar" [selected]
+                  - option "Completada"
+              - cell "Baja" [ref=e499]:
+                - generic [ref=e500]:
+                  - img [ref=e501]
+                  - text: Baja
+              - cell "jun. 18" [ref=e503]
+              - cell "jun. 26" [ref=e504]
+            - row "Kick-off meeting con equipo — Sin empezar Normal jun. 28 jul. 5" [ref=e505]:
+              - cell "Kick-off meeting con equipo" [ref=e506] [cursor=pointer]:
+                - generic [ref=e508]: Kick-off meeting con equipo
+              - cell "—" [ref=e509]
+              - cell "Sin empezar" [ref=e510]:
+                - combobox [ref=e511] [cursor=pointer]:
+                  - option "Sin empezar" [selected]
+                  - option "En curso"
+                  - option "En revisión"
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Normal" [ref=e512]:
+                - generic [ref=e513]:
+                  - img [ref=e514]
+                  - text: Normal
+              - cell "jun. 28" [ref=e516]
+              - cell "jul. 5" [ref=e517]
+    - generic [ref=e519]:
+      - generic [ref=e520]:
+        - heading "Editar tarea" [level=2] [ref=e521]
+        - button [ref=e522] [cursor=pointer]:
+          - img [ref=e523]
+      - generic [ref=e526]:
+        - generic [ref=e527]:
+          - generic [ref=e528]: Título *
+          - textbox "Nombre de la tarea…" [active] [ref=e529]: Identificar stakeholders clave
+        - generic [ref=e530]:
+          - generic [ref=e531]: Descripción
+          - textbox "Descripción opcional…" [ref=e532]
+        - generic [ref=e533]:
+          - generic [ref=e534]:
+            - generic [ref=e535]: Fase
+            - combobox [ref=e536] [cursor=pointer]:
+              - option "Fase 1 – Planeación" [selected]
+              - option "Fase 2 – Licitación y Compras"
+              - option "Fase 3 – Obra Civil"
+              - option "Fase 4 – Instalación y Pruebas"
+              - option "Fase 5 – Capacitación y Arranque"
+              - option "Spreadsheet Import"
+          - generic [ref=e537]:
+            - generic [ref=e538]: Asignado
+            - combobox [ref=e539] [cursor=pointer]:
+              - option "Sin asignar" [selected]
+              - option "Juan Manuel Vargas"
+              - option "Ana Torres"
+              - option "Carlos Méndez"
+              - option "Lucía Fernández"
+        - generic [ref=e540]:
+          - generic [ref=e541]:
+            - generic [ref=e542]: Estado
+            - combobox [ref=e543] [cursor=pointer]:
+              - option "Sin empezar"
+              - option "En curso"
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar" [selected]
+              - option "Completada"
+          - generic [ref=e544]:
+            - generic [ref=e545]: Prioridad
+            - combobox [ref=e546] [cursor=pointer]:
+              - option "Urgente"
+              - option "Alta"
+              - option "Normal"
+              - option "Baja" [selected]
+        - generic [ref=e547]:
+          - generic [ref=e548]:
+            - generic [ref=e549]: Fecha de inicio
+            - textbox [ref=e550]: 2026-06-18
+          - generic [ref=e551]:
+            - generic [ref=e552]: Fecha límite
+            - textbox [ref=e553]: 2026-06-26
+        - generic [ref=e554]:
+          - generic [ref=e555]:
+            - generic [ref=e556]: Riesgo
+            - combobox [ref=e557] [cursor=pointer]:
+              - option "Sin especificar" [selected]
+              - option "Alto"
+              - option "Medio"
+              - option "Bajo"
+          - generic [ref=e558]:
+            - checkbox "Marcar como hito" [ref=e559] [cursor=pointer]
+            - generic [ref=e560] [cursor=pointer]: Marcar como hito
+      - generic [ref=e561]:
+        - button "Eliminar" [ref=e562] [cursor=pointer]:
+          - img [ref=e563]
+          - text: Eliminar
+        - generic [ref=e566]:
+          - button "Cancelar" [ref=e567] [cursor=pointer]
+          - button "Guardar cambios" [ref=e568] [cursor=pointer]
+  - generic [ref=e313]: "0.5"

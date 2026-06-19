@@ -1,0 +1,151 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G Gestum" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+        - generic [ref=e8]: Gestum
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - button "Atrás" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button "Adelante" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - generic [ref=e22]: Buscar
+        - generic [ref=e23]: Ctrl J
+      - generic "Juan Manuel Vargas" [ref=e25] [cursor=pointer]: JV
+    - generic [ref=e26]:
+      - complementary [ref=e27]:
+        - generic [ref=e29]: Inicio
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - button "Respuestas" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Respuestas
+            - button "Comentarios asignados" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Comentarios asignados
+            - button "Mis tareas" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+              - text: Mis tareas
+            - button "Más" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - text: Más
+          - generic [ref=e49]:
+            - generic [ref=e50]: Espacios
+            - button "Agregar espacio" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+          - button "✳ Todas las tareas - Gestum" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: ✳
+            - generic [ref=e55]: Todas las tareas - Gestum
+          - button "P Proyecto Hospital test" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: P
+            - generic [ref=e60]: Proyecto Hospital test
+            - img [ref=e61]
+          - generic [ref=e64]:
+            - button "Fase 1 – Planeación 8" [ref=e549] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e69]: Fase 1 – Planeación
+              - generic [ref=e70]: "8"
+            - button "Fase 2 – Licitación y Compras 1" [ref=e550] [cursor=pointer]:
+              - img [ref=e72]
+              - generic [ref=e75]: Fase 2 – Licitación y Compras
+              - generic [ref=e551]: "1"
+            - button "Fase 3 – Obra Civil" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - generic [ref=e80]: Fase 3 – Obra Civil
+            - button "Fase 4 – Instalación y Pruebas" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - generic [ref=e85]: Fase 4 – Instalación y Pruebas
+            - button "Fase 5 – Capacitación y Arranque" [ref=e86] [cursor=pointer]:
+              - img [ref=e87]
+              - generic [ref=e90]: Fase 5 – Capacitación y Arranque
+            - button "Spreadsheet Import" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - generic [ref=e94]: Spreadsheet Import
+            - button "Nuevo espacio" [ref=e95] [cursor=pointer]:
+              - img [ref=e96]
+              - generic [ref=e97]: Nuevo espacio
+      - main [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: P
+              - generic [ref=e103]: Proyecto Hospital test
+              - img [ref=e104]
+              - generic [ref=e107]: /
+              - img [ref=e108]
+              - generic [ref=e113]: Fase 2 – Licitación y Compras
+              - img [ref=e114] [cursor=pointer]
+            - button "Compartir" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - text: Compartir
+          - generic [ref=e123]:
+            - button "Tablero" [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - text: Tablero
+            - button "Calendario" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - text: Calendario
+            - button "Equipo" [ref=e133] [cursor=pointer]:
+              - img [ref=e134]
+              - text: Equipo
+            - button "Gantt" [ref=e139] [cursor=pointer]:
+              - img [ref=e140]
+              - text: Gantt
+            - button "Lista" [ref=e142] [cursor=pointer]:
+              - img [ref=e143]
+              - text: Lista
+            - button "Panel" [ref=e144] [cursor=pointer]:
+              - img [ref=e145]
+              - text: Panel
+        - generic [ref=e150]:
+          - button "Filtros" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]
+            - text: Filtros
+          - button "Resetear datos" [ref=e155] [cursor=pointer]:
+            - img [ref=e156]
+            - text: Resetear datos
+          - button "Importar vista compartida" [ref=e159] [cursor=pointer]:
+            - img [ref=e160]
+            - text: Importar vista compartida
+          - button "Importar CSV" [ref=e162] [cursor=pointer]:
+            - img [ref=e163]
+            - text: Importar CSV
+          - button "Agregar tarjeta" [ref=e167] [cursor=pointer]:
+            - img [ref=e168]
+            - text: Agregar tarjeta
+        - table [ref=e342]:
+          - rowgroup [ref=e343]:
+            - row "Tarea Asignado Estado Prioridad Inicio Vence" [ref=e344]:
+              - columnheader "Tarea" [ref=e345]
+              - columnheader "Asignado" [ref=e346]
+              - columnheader "Estado" [ref=e347]
+              - columnheader "Prioridad" [ref=e348]
+              - columnheader "Inicio" [ref=e349]
+              - columnheader "Vence" [ref=e350]
+          - rowgroup [ref=e351]:
+            - row "Presupuesto inicial CM Carlos En revisión Normal jun. 8 jun. 20" [ref=e466]:
+              - cell "Presupuesto inicial" [ref=e467] [cursor=pointer]:
+                - generic [ref=e469]: Presupuesto inicial
+              - cell "CM Carlos" [ref=e470]:
+                - generic [ref=e471]:
+                  - generic [ref=e472]: CM
+                  - generic [ref=e473]: Carlos
+              - cell "En revisión" [ref=e474]:
+                - combobox [ref=e475] [cursor=pointer]:
+                  - option "Sin empezar"
+                  - option "En curso"
+                  - option "En revisión" [selected]
+                  - option "Bloqueada"
+                  - option "Por validar"
+                  - option "Completada"
+              - cell "Normal" [ref=e476]:
+                - generic [ref=e477]:
+                  - img [ref=e478]
+                  - text: Normal
+              - cell "jun. 8" [ref=e480]
+              - cell "jun. 20" [ref=e481]
+  - generic [ref=e309]: "0.5"

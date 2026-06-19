@@ -1,0 +1,225 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img [ref=e5]
+      - generic [ref=e8]: Vista de solo lectura
+      - generic [ref=e9]: —
+      - generic [ref=e10]: Proyecto Hospital test
+      - generic [ref=e11]: Snapshot compartido · no se pueden hacer cambios
+    - generic [ref=e12]:
+      - button "Fase 1 – Planeación 8" [ref=e13] [cursor=pointer]:
+        - text: Fase 1 – Planeación
+        - generic [ref=e14]: "8"
+      - button "Fase 2 – Licitación y Compras 1" [ref=e15] [cursor=pointer]:
+        - text: Fase 2 – Licitación y Compras
+        - generic [ref=e16]: "1"
+      - button "Fase 3 – Obra Civil" [ref=e17] [cursor=pointer]
+      - button "Fase 4 – Instalación y Pruebas" [ref=e18] [cursor=pointer]
+      - button "Fase 5 – Capacitación y Arranque" [ref=e19] [cursor=pointer]
+      - button "Spreadsheet Import" [ref=e20] [cursor=pointer]
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - button "Tablero" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - text: Tablero
+        - button "Calendario" [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+          - text: Calendario
+        - button "Equipo" [ref=e32] [cursor=pointer]:
+          - img [ref=e33]
+          - text: Equipo
+        - button "Gantt" [ref=e38] [cursor=pointer]:
+          - img [ref=e39]
+          - text: Gantt
+        - button "Lista" [active] [ref=e41] [cursor=pointer]:
+          - img [ref=e42]
+          - text: Lista
+        - button "Panel" [ref=e43] [cursor=pointer]:
+          - img [ref=e44]
+          - text: Panel
+      - button "Filtros" [ref=e193] [cursor=pointer]:
+        - img [ref=e194]
+        - text: Filtros
+    - table [ref=e197]:
+      - rowgroup [ref=e198]:
+        - row "Tarea Asignado Estado Prioridad Inicio Vence" [ref=e199]:
+          - columnheader "Tarea" [ref=e200]
+          - columnheader "Asignado" [ref=e201]
+          - columnheader "Estado" [ref=e202]
+          - columnheader "Prioridad" [ref=e203]
+          - columnheader "Inicio" [ref=e204]
+          - columnheader "Vence" [ref=e205]
+      - rowgroup [ref=e206]:
+        - row "Definir alcance del proyecto JM Juan En curso Alta jun. 1 jun. 20" [ref=e207]:
+          - cell "Definir alcance del proyecto" [ref=e208] [cursor=pointer]:
+            - generic [ref=e210]: Definir alcance del proyecto
+          - cell "JM Juan" [ref=e211]:
+            - generic [ref=e212]:
+              - generic [ref=e213]: JM
+              - generic [ref=e214]: Juan
+          - cell "En curso" [ref=e215]:
+            - combobox [disabled] [ref=e216]:
+              - option "Sin empezar"
+              - option "En curso" [selected]
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - cell "Alta" [ref=e217]:
+            - generic [ref=e218]:
+              - img [ref=e219]
+              - text: Alta
+          - cell "jun. 1" [ref=e221]
+          - cell "jun. 20" [ref=e222]
+        - row "Levantamiento de requerimientos equipos AT Ana En curso Alta jun. 5 jun. 22" [ref=e223]:
+          - cell "Levantamiento de requerimientos equipos" [ref=e224] [cursor=pointer]:
+            - generic [ref=e225]:
+              - generic [ref=e226]: Levantamiento de requerimientos
+              - generic [ref=e227]: equipos
+          - cell "AT Ana" [ref=e228]:
+            - generic [ref=e229]:
+              - generic [ref=e230]: AT
+              - generic [ref=e231]: Ana
+          - cell "En curso" [ref=e232]:
+            - combobox [disabled] [ref=e233]:
+              - option "Sin empezar"
+              - option "En curso" [selected]
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - cell "Alta" [ref=e234]:
+            - generic [ref=e235]:
+              - img [ref=e236]
+              - text: Alta
+          - cell "jun. 5" [ref=e238]
+          - cell "jun. 22" [ref=e239]
+        - row "Plan de trabajo Fase 1 CM Carlos En revisión Normal jun. 8 jun. 19" [ref=e240]:
+          - cell "Plan de trabajo Fase 1" [ref=e241] [cursor=pointer]:
+            - generic [ref=e243]: Plan de trabajo Fase 1
+          - cell "CM Carlos" [ref=e244]:
+            - generic [ref=e245]:
+              - generic [ref=e246]: CM
+              - generic [ref=e247]: Carlos
+          - cell "En revisión" [ref=e248]:
+            - combobox [disabled] [ref=e249]:
+              - option "Sin empezar"
+              - option "En curso"
+              - option "En revisión" [selected]
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - cell "Normal" [ref=e250]:
+            - generic [ref=e251]:
+              - img [ref=e252]
+              - text: Normal
+          - cell "jun. 8" [ref=e254]
+          - cell "jun. 19" [ref=e255]
+        - row "Validación con dirección LF Lucía Bloqueada Urgente jun. 10 jun. 18" [ref=e256]:
+          - cell "Validación con dirección" [ref=e257] [cursor=pointer]:
+            - generic [ref=e259]: Validación con dirección
+          - cell "LF Lucía" [ref=e260]:
+            - generic [ref=e261]:
+              - generic [ref=e262]: LF
+              - generic [ref=e263]: Lucía
+          - cell "Bloqueada" [ref=e264]:
+            - combobox [disabled] [ref=e265]:
+              - option "Sin empezar"
+              - option "En curso"
+              - option "En revisión"
+              - option "Bloqueada" [selected]
+              - option "Por validar"
+              - option "Completada"
+          - cell "Urgente" [ref=e266]:
+            - generic [ref=e267]:
+              - img [ref=e268]
+              - text: Urgente
+          - cell "jun. 10" [ref=e270]
+          - cell "jun. 18" [ref=e271]
+        - row "Análisis de riesgos JM Juan Por validar Alta jun. 12 jun. 25" [ref=e272]:
+          - cell "Análisis de riesgos" [ref=e273] [cursor=pointer]:
+            - generic [ref=e275]: Análisis de riesgos
+          - cell "JM Juan" [ref=e276]:
+            - generic [ref=e277]:
+              - generic [ref=e278]: JM
+              - generic [ref=e279]: Juan
+          - cell "Por validar" [ref=e280]:
+            - combobox [disabled] [ref=e281]:
+              - option "Sin empezar"
+              - option "En curso"
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar" [selected]
+              - option "Completada"
+          - cell "Alta" [ref=e282]:
+            - generic [ref=e283]:
+              - img [ref=e284]
+              - text: Alta
+          - cell "jun. 12" [ref=e286]
+          - cell "jun. 25" [ref=e287]
+        - row "Definir proveedores clave licitación JM Juan En curso Normal jun. 15 jun. 24" [ref=e288]:
+          - cell "Definir proveedores clave licitación" [ref=e289] [cursor=pointer]:
+            - generic [ref=e290]:
+              - generic [ref=e291]: Definir proveedores clave
+              - generic [ref=e292]: licitación
+          - cell "JM Juan" [ref=e293]:
+            - generic [ref=e294]:
+              - generic [ref=e295]: JM
+              - generic [ref=e296]: Juan
+          - cell "En curso" [ref=e297]:
+            - combobox [disabled] [ref=e298]:
+              - option "Sin empezar"
+              - option "En curso" [selected]
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - cell "Normal" [ref=e299]:
+            - generic [ref=e300]:
+              - img [ref=e301]
+              - text: Normal
+          - cell "jun. 15" [ref=e303]
+          - cell "jun. 24" [ref=e304]
+        - row "Cronograma general del proyecto AT Ana En curso Alta jun. 2 jun. 21" [ref=e305]:
+          - cell "Cronograma general del proyecto" [ref=e306] [cursor=pointer]:
+            - generic [ref=e308]: Cronograma general del proyecto
+          - cell "AT Ana" [ref=e309]:
+            - generic [ref=e310]:
+              - generic [ref=e311]: AT
+              - generic [ref=e312]: Ana
+          - cell "En curso" [ref=e313]:
+            - combobox [disabled] [ref=e314]:
+              - option "Sin empezar"
+              - option "En curso" [selected]
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - cell "Alta" [ref=e315]:
+            - generic [ref=e316]:
+              - img [ref=e317]
+              - text: Alta
+          - cell "jun. 2" [ref=e319]
+          - cell "jun. 21" [ref=e320]
+        - row "Identificar stakeholders clave AT Ana Por validar Baja jul. 1 jul. 15" [ref=e321]:
+          - cell "Identificar stakeholders clave" [ref=e322] [cursor=pointer]:
+            - generic [ref=e324]: Identificar stakeholders clave
+          - cell "AT Ana" [ref=e325]:
+            - generic [ref=e326]:
+              - generic [ref=e327]: AT
+              - generic [ref=e328]: Ana
+          - cell "Por validar" [ref=e329]:
+            - combobox [disabled] [ref=e330]:
+              - option "Sin empezar"
+              - option "En curso"
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar" [selected]
+              - option "Completada"
+          - cell "Baja" [ref=e331]:
+            - generic [ref=e332]:
+              - img [ref=e333]
+              - text: Baja
+          - cell "jul. 1" [ref=e335]
+          - cell "jul. 15" [ref=e336]
+  - generic [ref=e190]: "0.9"

@@ -1,0 +1,271 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G Gestum" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+        - generic [ref=e8]: Gestum
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - button "Atrás" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button "Adelante" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - generic [ref=e22]: Buscar
+        - generic [ref=e23]: Ctrl J
+      - generic "Juan Manuel Vargas" [ref=e25] [cursor=pointer]: JV
+    - generic [ref=e26]:
+      - complementary [ref=e27]:
+        - generic [ref=e29]: Inicio
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - button "Respuestas" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Respuestas
+            - button "Comentarios asignados" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Comentarios asignados
+            - button "Mis tareas" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+              - text: Mis tareas
+            - button "Más" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - text: Más
+          - generic [ref=e49]:
+            - generic [ref=e50]: Espacios
+            - button "Agregar espacio" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+          - button "✳ Todas las tareas - Gestum" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: ✳
+            - generic [ref=e55]: Todas las tareas - Gestum
+          - button "P Proyecto Hospital test" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: P
+            - generic [ref=e60]: Proyecto Hospital test
+            - img [ref=e61]
+          - generic [ref=e64]:
+            - button "Fase 1 – Planeación 10" [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e69]: Fase 1 – Planeación
+              - generic [ref=e70]: "10"
+            - button "Fase 2 – Licitación y Compras" [ref=e71] [cursor=pointer]:
+              - img [ref=e72]
+              - generic [ref=e75]: Fase 2 – Licitación y Compras
+            - button "Fase 3 – Obra Civil" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - generic [ref=e80]: Fase 3 – Obra Civil
+            - button "Fase 4 – Instalación y Pruebas" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - generic [ref=e85]: Fase 4 – Instalación y Pruebas
+            - button "Fase 5 – Capacitación y Arranque" [ref=e86] [cursor=pointer]:
+              - img [ref=e87]
+              - generic [ref=e90]: Fase 5 – Capacitación y Arranque
+            - button "Spreadsheet Import" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - generic [ref=e94]: Spreadsheet Import
+            - button "Nuevo espacio" [ref=e95] [cursor=pointer]:
+              - img [ref=e96]
+              - generic [ref=e97]: Nuevo espacio
+      - main [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e102]: P
+              - generic [ref=e103]: Proyecto Hospital test
+              - img [ref=e104]
+              - generic [ref=e107]: /
+              - img [ref=e108]
+              - generic [ref=e113]: Fase 1 – Planeación
+              - img [ref=e114] [cursor=pointer]
+            - button "Compartir" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - text: Compartir
+          - generic [ref=e123]:
+            - button "Tablero" [ref=e124] [cursor=pointer]:
+              - img [ref=e125]
+              - text: Tablero
+            - button "Calendario" [ref=e130] [cursor=pointer]:
+              - img [ref=e131]
+              - text: Calendario
+            - button "Equipo" [ref=e133] [cursor=pointer]:
+              - img [ref=e134]
+              - text: Equipo
+            - button "Gantt" [ref=e139] [cursor=pointer]:
+              - img [ref=e140]
+              - text: Gantt
+            - button "Lista" [ref=e142] [cursor=pointer]:
+              - img [ref=e143]
+              - text: Lista
+            - button "Panel" [ref=e144] [cursor=pointer]:
+              - img [ref=e145]
+              - text: Panel
+        - generic [ref=e150]:
+          - button "Filtros" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]
+            - text: Filtros
+          - button "Resetear datos" [ref=e155] [cursor=pointer]:
+            - img [ref=e156]
+            - text: Resetear datos
+          - button "Importar vista compartida" [ref=e159] [cursor=pointer]:
+            - img [ref=e160]
+            - text: Importar vista compartida
+          - button "Importar CSV" [ref=e162] [cursor=pointer]:
+            - img [ref=e163]
+            - text: Importar CSV
+          - button "Agregar tarjeta" [ref=e167] [cursor=pointer]:
+            - img [ref=e168]
+            - text: Agregar tarjeta
+        - generic [ref=e540]:
+          - generic [ref=e541]:
+            - generic [ref=e543]: Tarea
+            - generic [ref=e544]:
+              - generic [ref=e547]: May 30
+              - generic [ref=e550]: Jun 2
+              - generic [ref=e553]: Jun 5
+              - generic [ref=e556]: Jun 8
+              - generic [ref=e559]: Jun 11
+              - generic [ref=e562]: Jun 14
+              - generic [ref=e565]: Jun 17
+              - generic [ref=e568]: Jun 20
+              - generic [ref=e571]: Jun 23
+              - generic [ref=e574]: Jun 26
+              - generic [ref=e577]: Jun 29
+              - generic [ref=e580]: Jul 2
+              - generic [ref=e583]: Jul 5
+              - generic [ref=e586]: Jul 8
+              - generic [ref=e589]: Jul 11
+              - generic [ref=e592]: Jul 14
+              - generic [ref=e595]: Jul 17
+          - generic [ref=e596]:
+            - generic [ref=e597] [cursor=pointer]:
+              - generic [ref=e598]: JM
+              - generic [ref=e599]: Definir alcance del proyecto
+            - generic [ref=e619]:
+              - generic: Definir alcance del proyecto
+          - generic [ref=e624]:
+            - generic [ref=e625] [cursor=pointer]:
+              - generic [ref=e626]: AT
+              - generic [ref=e627]: Levantamiento de requerimientos
+            - generic [ref=e647]:
+              - generic: Levantamiento de requerimientos
+          - generic [ref=e652]:
+            - generic [ref=e653] [cursor=pointer]:
+              - generic [ref=e654]: CM
+              - generic [ref=e655]: Plan de trabajo Fase 1
+            - generic [ref=e675]:
+              - generic: Plan de trabajo Fase 1
+          - generic [ref=e680]:
+            - generic [ref=e681] [cursor=pointer]:
+              - generic [ref=e682]: LF
+              - generic [ref=e683]: Validación con dirección
+            - generic [ref=e703]:
+              - generic: Validación con dirección
+          - generic [ref=e708]:
+            - generic [ref=e709] [cursor=pointer]:
+              - generic [ref=e710]: JM
+              - generic [ref=e711]: Análisis de riesgos
+            - generic [ref=e731]:
+              - generic: Análisis de riesgos
+          - generic [ref=e736]:
+            - generic [ref=e737] [cursor=pointer]:
+              - generic [ref=e738]: JM
+              - generic [ref=e739]: Definir proveedores clave
+            - generic [ref=e759]:
+              - generic: Definir proveedores clave
+          - generic [ref=e764]:
+            - generic [ref=e765] [cursor=pointer]:
+              - generic [ref=e766]: AT
+              - generic [ref=e767]: Cronograma general del proyecto
+            - generic [ref=e787]:
+              - generic: Cronograma general del proyecto
+          - generic [ref=e792]:
+            - generic [ref=e793] [cursor=pointer]:
+              - generic [ref=e794]: CM
+              - generic [ref=e795]: Presupuesto inicial
+            - generic [ref=e815]:
+              - generic: Presupuesto inicial
+          - generic [ref=e820]:
+            - generic [ref=e821] [cursor=pointer]:
+              - generic [ref=e822]: AT
+              - generic [ref=e823]: Identificar stakeholders clave
+            - generic [ref=e843]:
+              - generic: Identificar stakeholders clave
+          - generic [ref=e848]:
+            - generic [ref=e851] [cursor=pointer]: Kick-off meeting con equipo
+            - generic [ref=e871]:
+              - generic: Kick-off meeting con equipo
+    - generic [ref=e877]:
+      - generic [ref=e878]:
+        - heading "Editar tarea" [level=2] [ref=e879]
+        - button [ref=e880] [cursor=pointer]:
+          - img [ref=e881]
+      - generic [ref=e884]:
+        - generic [ref=e885]:
+          - generic [ref=e886]: Título *
+          - textbox "Nombre de la tarea…" [ref=e887]: Kick-off meeting con equipo
+        - generic [ref=e888]:
+          - generic [ref=e889]: Descripción
+          - textbox "Descripción opcional…" [ref=e890]
+        - generic [ref=e891]:
+          - generic [ref=e892]:
+            - generic [ref=e893]: Fase
+            - combobox [ref=e894] [cursor=pointer]:
+              - option "Fase 1 – Planeación" [selected]
+              - option "Fase 2 – Licitación y Compras"
+              - option "Fase 3 – Obra Civil"
+              - option "Fase 4 – Instalación y Pruebas"
+              - option "Fase 5 – Capacitación y Arranque"
+              - option "Spreadsheet Import"
+          - generic [ref=e895]:
+            - generic [ref=e896]: Asignado
+            - combobox [ref=e897] [cursor=pointer]:
+              - option "Sin asignar" [selected]
+              - option "Juan Manuel Vargas"
+              - option "Ana Torres"
+              - option "Carlos Méndez"
+              - option "Lucía Fernández"
+        - generic [ref=e898]:
+          - generic [ref=e899]:
+            - generic [ref=e900]: Estado
+            - combobox [ref=e901] [cursor=pointer]:
+              - option "Sin empezar" [selected]
+              - option "En curso"
+              - option "En revisión"
+              - option "Bloqueada"
+              - option "Por validar"
+              - option "Completada"
+          - generic [ref=e902]:
+            - generic [ref=e903]: Prioridad
+            - combobox [ref=e904] [cursor=pointer]:
+              - option "Urgente"
+              - option "Alta"
+              - option "Normal" [selected]
+              - option "Baja"
+        - generic [ref=e905]:
+          - generic [ref=e906]:
+            - generic [ref=e907]: Fecha de inicio
+            - textbox [ref=e908]: 2026-06-28
+          - generic [ref=e909]:
+            - generic [ref=e910]: Fecha límite
+            - textbox [ref=e911]: 2026-07-05
+        - generic [ref=e912]:
+          - generic [ref=e913]:
+            - generic [ref=e914]: Riesgo
+            - combobox [ref=e915] [cursor=pointer]:
+              - option "Sin especificar" [selected]
+              - option "Alto"
+              - option "Medio"
+              - option "Bajo"
+          - generic [ref=e916]:
+            - checkbox "Marcar como hito" [ref=e917] [cursor=pointer]
+            - generic [ref=e918] [cursor=pointer]: Marcar como hito
+      - generic [ref=e919]:
+        - generic [ref=e927]:
+          - generic [ref=e928]: ¿Eliminar?
+          - button "Sí" [ref=e929] [cursor=pointer]
+          - button "No" [ref=e930] [cursor=pointer]
+        - generic [ref=e924]:
+          - button "Cancelar" [ref=e925] [cursor=pointer]
+          - button "Guardar cambios" [ref=e926] [cursor=pointer]
+  - generic [ref=e314]: "0.5"
