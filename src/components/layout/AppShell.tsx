@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { onValue, onDisconnect, set, remove, get, update, ref } from 'firebase/database';
+import type { User } from 'firebase/auth';
 import { GlobalTopBar } from './GlobalTopBar';
 import { SidebarPanel } from './SidebarPanel';
 import { TopBar } from './TopBar';
@@ -12,26 +14,34 @@ import { TeamView } from '../widgets/TeamView';
 import { TaskFormModal } from '../widgets/TaskFormModal';
 import { ProjectDropdown } from '../widgets/ProjectDropdown';
 import { CSVImporter } from '../widgets/CSVImporter';
-import { ShareModal } from '../ui/ShareModal';
-import {
-  compressToBase64, downloadShareFile, MAX_B64_CHARS, type SharePayload,
-} from '../../utils/share';
+import { InviteModal } from '../ui/InviteModal';
+import type { PresenceUser } from './TopBar';
+import type { SharePayload } from '../../utils/share';
+import { X } from 'lucide-react';
+import { useConnectionStatus } from '../../hooks/useConnectionStatus';
+import { ResetProjectModal } from '../ui/ResetProjectModal';
 import type {
   Assignee, FilterState, Phase, ProjectData, Task,
   RawAssignee, StoredProject, ProjectStore, StoredPhase,
 } from '../../data/types';
 import { EMPTY_FILTERS, applyFilters, ALL_PHASES_ID } from '../../data/types';
+import {
+  db, projectRef, projectMetaRef, projectPayloadRef,
+  userProjectRef,
+  presenceRef, presenceListRef,
+} from '../../firebase';
+
+// Unique per browser tab — used to detect our own writes echoed back via onValue
+const SESSION_ID = crypto.randomUUID();
 
 interface AppShellProps {
   data: ProjectData;
   onImportSharedView: () => void;
-  /** Non-null when App.tsx has parsed a shared-view file to import as a new project */
   pendingImport?: SharePayload | null;
   onPendingImportDone?: () => void;
-  /** When provided (from Firebase), used as the initial store instead of localStorage */
   initialStore?: ProjectStore | null;
-  /** Called when user clicks "Cerrar sesión" */
   onSignOut?: () => void;
+  user?: User | null;
 }
 
 // ── Storage version ───────────────────────────────────────────────────────────
@@ -91,7 +101,7 @@ function mergeById<T extends { id: string }>(existing: T[], incoming: T[]): T[] 
 // ── Project factory ───────────────────────────────────────────────────────────
 
 function makeProjectId() {
-  return `proj-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+  return crypto.randomUUID();
 }
 
 function createProject(
@@ -175,15 +185,23 @@ const OPEN_STATUSES: Task['status'][] = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function AppShell({ data, onImportSharedView, pendingImport, onPendingImportDone, initialStore, onSignOut }: AppShellProps) {
+export function AppShell({ data, onImportSharedView, pendingImport, onPendingImportDone, initialStore, onSignOut, user }: AppShellProps) {
   // ── UI state ─────────────────────────────────────────────────────────────────
-  const [activeTab, setActiveTab]           = useState('Panel');
-  const [importResult, setImportResult]     = useState<string | null>(null);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [shareUrl, setShareUrl]             = useState<string | null>(null);
-  const [filters, setFilters]               = useState<FilterState>(EMPTY_FILTERS);
-  const [showTaskForm, setShowTaskForm]     = useState(false);
-  const [selectedTask, setSelectedTask]     = useState<Task | null>(null);
+  const [activeTab, setActiveTab]             = useState('Panel');
+  const [importResult, setImportResult]       = useState<string | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [filters, setFilters]                 = useState<FilterState>(EMPTY_FILTERS);
+  const [presenceUsers, setPresenceUsers]     = useState<PresenceUser[]>([]);
+
+  const connected = useConnectionStatus();
+  const [showTaskForm, setShowTaskForm]       = useState(false);
+  const [selectedTask, setSelectedTask]       = useState<Task | null>(null);
+  const [showSettings, setShowSettings]       = useState(false);
+  const [deletedTask, setDeletedTask]         = useState<Task | null>(null);
+  const undoTimerRef     = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Tracks the task whose Firebase deletion is deferred during the undo window.
+  // The write effect skips this task ID so Firebase is NOT touched until the 5s timer fires.
+  const deferredDeleteRef = useRef<{ taskId: string; pid: string } | null>(null);
 
   // ── Project store ─────────────────────────────────────────────────────────────
   const [store, setStore] = useState<ProjectStore>(() => initialStore ?? loadOrMigrate(data));
@@ -257,13 +275,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
 
   const today = new Date().toISOString().slice(0, 10);
 
-  // Compute KPIs + workload from active project tasks (all phases)
-  const kpis = useMemo(() => [
-    { label: 'Sin asignar',  value: tasks.filter(t => !t.assigneeId).length,              color: '#9aa3b2' },
-    { label: 'En curso',     value: tasks.filter(t => t.status === 'en-curso').length,    color: accentColor },
-    { label: 'Completadas',  value: tasks.filter(t => t.status === 'completada').length,  color: '#1f9d63' },
-  ], [tasks, accentColor]);
-
+  // Compute workload from active project tasks (all phases)
   const workload = useMemo(() => [
     { label: 'Sin empezar', value: tasks.filter(t => t.status === 'sin-empezar').length, color: '#9aa3b2' },
     { label: 'En curso',    value: tasks.filter(t => t.status === 'en-curso').length,    color: accentColor },
@@ -272,11 +284,227 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
     { label: 'Por validar', value: tasks.filter(t => t.status === 'por-validar').length, color: '#b58aa6' },
   ], [tasks, accentColor]);
 
-  // ── Persistence ───────────────────────────────────────────────────────────────
+  // ── Persistence: localStorage ─────────────────────────────────────────────────
 
   useEffect(() => {
     try { localStorage.setItem('pm-projects', JSON.stringify(store)); } catch { /* quota */ }
   }, [store]);
+
+  // ── Firebase: bootstrap new projects (create meta if missing) ─────────────────
+
+  useEffect(() => {
+    if (!user) return;
+    for (const [pid, project] of Object.entries(store.projects)) {
+      get(projectMetaRef(pid)).then(snap => {
+        if (snap.exists()) return;
+        const writes: Record<string, unknown> = {
+          [`projects/${pid}/meta/name`]:                project.name,
+          [`projects/${pid}/meta/ownerUid`]:            user.uid,
+          [`projects/${pid}/meta/createdAt`]:           project.createdAt,
+          [`projects/${pid}/meta/members/${user.uid}`]: true,
+          [`userProjects/${user.uid}/${pid}`]:          true,
+          [`projects/${pid}/payload/_meta`]:            { lastModified: Date.now(), _sid: SESSION_ID },
+        };
+        project.tasks.forEach((t, i)    => { writes[`projects/${pid}/payload/tasks/${t.id}`]     = { ...t, order: i }; });
+        project.phases.forEach((p, i)   => { writes[`projects/${pid}/payload/phases/${p.id}`]    = { ...p, order: i }; });
+        project.assignees.forEach(a     => { writes[`projects/${pid}/payload/assignees/${a.id}`] = a; });
+        update(ref(db), writes).catch(() => {});
+      }).catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.uid]);
+
+  // ── Firebase: granular debounced write — only changed tasks/phases/assignees ───
+
+  const writeTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevProjectRef  = useRef<StoredProject | undefined>(undefined);
+  const pendingWritesRef = useRef<Record<string, unknown>>({});
+
+  useEffect(() => {
+    if (!user) return;
+    const pid     = store.activeProjectId;
+    const project = store.projects[pid];
+    if (!project) return;
+
+    // Assign canonical order (array index) before diffing
+    const tasksWithOrder  = project.tasks.map((t, i)  => ({ ...t,  order: i }));
+    const phasesWithOrder = project.phases.map((p, i) => ({ ...p, order: i }));
+
+    const prev = prevProjectRef.current;
+
+    // First render or project switch — set baseline without writing
+    if (!prev || prev.id !== project.id) {
+      prevProjectRef.current = { ...project, tasks: tasksWithOrder, phases: phasesWithOrder };
+      return;
+    }
+
+    // ── Diff tasks ────────────────────────────────────────────────────────────
+    const prevTaskMap = new Map(prev.tasks.map(t => [t.id, t]));
+    for (const task of tasksWithOrder) {
+      const pt = prevTaskMap.get(task.id);
+      if (!pt || JSON.stringify(task) !== JSON.stringify(pt)) {
+        pendingWritesRef.current[`projects/${pid}/payload/tasks/${task.id}`] = task;
+      }
+    }
+    const currTaskIds = new Set(project.tasks.map(t => t.id));
+    for (const pt of prev.tasks) {
+      if (!currTaskIds.has(pt.id)) {
+        // Skip: deletion is within the undo window — Firebase write is deferred to the 5s timer
+        if (deferredDeleteRef.current?.taskId === pt.id) continue;
+        pendingWritesRef.current[`projects/${pid}/payload/tasks/${pt.id}`] = null;
+      }
+    }
+
+    // ── Diff phases ───────────────────────────────────────────────────────────
+    const prevPhaseMap = new Map(prev.phases.map(p => [p.id, p]));
+    for (const phase of phasesWithOrder) {
+      const pp = prevPhaseMap.get(phase.id);
+      if (!pp || JSON.stringify(phase) !== JSON.stringify(pp)) {
+        pendingWritesRef.current[`projects/${pid}/payload/phases/${phase.id}`] = phase;
+      }
+    }
+    const currPhaseIds = new Set(project.phases.map(p => p.id));
+    for (const pp of prev.phases) {
+      if (!currPhaseIds.has(pp.id)) {
+        pendingWritesRef.current[`projects/${pid}/payload/phases/${pp.id}`] = null;
+      }
+    }
+
+    // ── Diff assignees (unordered) ────────────────────────────────────────────
+    const prevAssigneeMap = new Map(prev.assignees.map(a => [a.id, a]));
+    for (const assignee of project.assignees) {
+      const pa = prevAssigneeMap.get(assignee.id);
+      if (!pa || JSON.stringify(assignee) !== JSON.stringify(pa)) {
+        pendingWritesRef.current[`projects/${pid}/payload/assignees/${assignee.id}`] = assignee;
+      }
+    }
+    const currAssigneeIds = new Set(project.assignees.map(a => a.id));
+    for (const pa of prev.assignees) {
+      if (!currAssigneeIds.has(pa.id)) {
+        pendingWritesRef.current[`projects/${pid}/payload/assignees/${pa.id}`] = null;
+      }
+    }
+
+    // Update baseline to current state
+    prevProjectRef.current = { ...project, tasks: tasksWithOrder, phases: phasesWithOrder };
+
+    if (Object.keys(pendingWritesRef.current).length === 0) return;
+
+    // Tag with session ID so our own onValue echo is ignored
+    pendingWritesRef.current[`projects/${pid}/payload/_meta`] = { lastModified: Date.now(), _sid: SESSION_ID };
+
+    if (writeTimerRef.current) clearTimeout(writeTimerRef.current);
+    writeTimerRef.current = setTimeout(() => {
+      const writes = { ...pendingWritesRef.current };
+      pendingWritesRef.current = {};
+      update(ref(db), writes).catch(() => {});
+    }, 300);
+  });
+
+  // ── Firebase: real-time listener for active project ───────────────────────────
+
+  const storeRef = useRef(store);
+  useEffect(() => { storeRef.current = store; }, [store]);
+
+  useEffect(() => {
+    if (!user) return;
+    const pid = store.activeProjectId;
+    const unsub = onValue(projectPayloadRef(pid), snap => {
+      if (!snap.exists()) return;
+      try {
+        const rawSnap = snap.val() as string | Record<string, unknown> | null;
+        let tasks: Task[], phases: StoredPhase[], assignees: RawAssignee[], sid: string | undefined;
+
+        if (typeof rawSnap === 'string') {
+          // OLD FORMAT (blob not yet migrated)
+          const data = JSON.parse(rawSnap) as { tasks: Task[]; phases: StoredPhase[]; assignees: RawAssignee[]; _sid?: string };
+          tasks     = data.tasks     ?? [];
+          phases    = data.phases    ?? [];
+          assignees = data.assignees ?? [];
+          sid       = data._sid;
+        } else if (rawSnap && typeof rawSnap === 'object') {
+          // NEW FORMAT — keyed by ID
+          const meta = rawSnap._meta as { _sid?: string } | null;
+          sid       = meta?._sid;
+          tasks     = Object.values((rawSnap.tasks     ?? {}) as Record<string, Task>)
+                        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+          phases    = Object.values((rawSnap.phases    ?? {}) as Record<string, StoredPhase>)
+                        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+          assignees = Object.values((rawSnap.assignees ?? {}) as Record<string, RawAssignee>);
+        } else {
+          return;
+        }
+
+        // Ignore our own write echoed back
+        if (sid === SESSION_ID) return;
+
+        const current = storeRef.current.projects[pid];
+        if (!current) return;
+
+        // Update prevProjectRef baseline so the write effect doesn't re-write Firebase data
+        const tasksWithOrder  = tasks.map((t, i)  => ({ ...t,  order: i }));
+        const phasesWithOrder = phases.map((p, i) => ({ ...p, order: i }));
+        prevProjectRef.current = { ...current, tasks: tasksWithOrder, phases: phasesWithOrder, assignees };
+
+        // Apply remote update — never overwrite meta fields (name, ownerUid, etc.)
+        setStore(prev => ({
+          ...prev,
+          projects: {
+            ...prev.projects,
+            [pid]: { ...prev.projects[pid], tasks, phases, assignees },
+          },
+        }));
+      } catch { /* corrupt payload — ignore */ }
+    });
+    return unsub;
+  // Re-subscribe only when project or user changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.activeProjectId, user?.uid]);
+
+  // Cancel timers when AppShell unmounts (avoid ghost writes / state updates)
+  useEffect(() => {
+    return () => {
+      if (writeTimerRef.current) clearTimeout(writeTimerRef.current);
+      if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    };
+  }, []);
+
+  // ── Firebase: presence ────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!user) return;
+    const pid = store.activeProjectId;
+    const pRef = presenceRef(pid, user.uid);
+
+    // Write own presence
+    set(pRef, {
+      displayName: user.displayName ?? null,
+      photoURL:    user.photoURL    ?? null,
+      ts:          Date.now(),
+    }).catch(() => {});
+
+    // Auto-remove on disconnect
+    onDisconnect(pRef).remove();
+
+    // Listen for other users' presence
+    const unsub = onValue(presenceListRef(pid), snap => {
+      if (!snap.exists()) { setPresenceUsers([]); return; }
+      const all = snap.val() as Record<string, { displayName: string | null; photoURL: string | null }>;
+      setPresenceUsers(
+        Object.entries(all)
+          .filter(([uid]) => uid !== user.uid)
+          .map(([uid, d]) => ({ uid, displayName: d.displayName, photoURL: d.photoURL })),
+      );
+    });
+
+    return () => {
+      unsub();
+      onDisconnect(pRef).cancel();
+      remove(pRef).catch(() => {});
+    };
+  // Re-run when switching projects or changing user
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.activeProjectId, user?.uid]);
 
   useEffect(() => {
     if (!importResult) return;
@@ -298,6 +526,9 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
   function handleReset() {
     updateActiveProject(p => ({ ...p, tasks: [] }));
     setFilters(EMPTY_FILTERS);
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    deferredDeleteRef.current = null;
+    setDeletedTask(null);
   }
 
   function handleViewTasksChange(updatedVisible: Task[]) {
@@ -346,26 +577,53 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
   }
 
   function handleDeleteTask(taskId: string) {
+    const task = activeProject?.tasks.find(t => t.id === taskId);
+    if (!task) return;
+    const pid = store.activeProjectId;
+
+    // If another task is already deferred, its undo window is being preempted —
+    // flush that deletion to Firebase immediately before opening the new window.
+    if (deferredDeleteRef.current) {
+      const { taskId: prevId, pid: prevPid } = deferredDeleteRef.current;
+      deferredDeleteRef.current = null;
+      if (user) {
+        update(ref(db), {
+          [`projects/${prevPid}/payload/tasks/${prevId}`]:       null,
+          [`projects/${prevPid}/payload/_meta`]: { lastModified: Date.now(), _sid: SESSION_ID },
+        }).catch(() => {});
+      }
+    }
+
     updateActiveProject(p => ({ ...p, tasks: p.tasks.filter(t => t.id !== taskId) }));
     setSelectedTask(null);
+    setDeletedTask(task);
+    deferredDeleteRef.current = { taskId, pid };
+
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    undoTimerRef.current = setTimeout(() => {
+      // Undo window expired — now write the deletion to Firebase
+      deferredDeleteRef.current = null;
+      setDeletedTask(null);
+      if (user) {
+        update(ref(db), {
+          [`projects/${pid}/payload/tasks/${taskId}`]:       null,
+          [`projects/${pid}/payload/_meta`]: { lastModified: Date.now(), _sid: SESSION_ID },
+        }).catch(() => {});
+      }
+    }, 5000);
   }
 
-  async function handleShare() {
-    const payload: SharePayload = {
-      version: 1,
-      projectName: activeProject?.name ?? 'Proyecto',
-      tasks,
-      phases: dynamicPhases,
-      assignees: rawAssigneesForImport,
-    };
-    const json = JSON.stringify(payload);
-    const b64  = await compressToBase64(json);
-    setShareUrl(
-      b64.length <= MAX_B64_CHARS
-        ? `${window.location.origin}${window.location.pathname}#shared=${b64}`
-        : null
-    );
-    setShowShareModal(true);
+  function handleUndoDelete() {
+    if (!deletedTask) return;
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    // Cancel the deferred deletion — task is reinstated, no Firebase deletion needed
+    deferredDeleteRef.current = null;
+    updateActiveProject(p => ({ ...p, tasks: [...p.tasks, deletedTask] }));
+    setDeletedTask(null);
+  }
+
+  function handleShare() {
+    setShowInviteModal(true);
   }
 
   // ── Project CRUD ──────────────────────────────────────────────────────────────
@@ -377,6 +635,10 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
     setActivePhaseId(firstId);
     setFilters(EMPTY_FILTERS);
     setActiveTab('Panel');
+    if (undoTimerRef.current) clearTimeout(undoTimerRef.current);
+    // Cancel the deferred deletion — user left the project without confirming ("no borrar tras salir")
+    deferredDeleteRef.current = null;
+    setDeletedTask(null);
   }
 
   function handleCreateProject(name: string) {
@@ -388,12 +650,25 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
     setActivePhaseId(np.phases[0].id);
     setFilters(EMPTY_FILTERS);
     setActiveTab('Panel');
+
+    if (user) {
+      const writes: Record<string, unknown> = {
+        [`projects/${np.id}/meta/name`]:                np.name,
+        [`projects/${np.id}/meta/ownerUid`]:            user.uid,
+        [`projects/${np.id}/meta/createdAt`]:           np.createdAt,
+        [`projects/${np.id}/meta/members/${user.uid}`]: true,
+        [`userProjects/${user.uid}/${np.id}`]:          true,
+        [`projects/${np.id}/payload/_meta`]:            { lastModified: Date.now(), _sid: SESSION_ID },
+      };
+      np.phases.forEach((p, i) => { writes[`projects/${np.id}/payload/phases/${p.id}`] = { ...p, order: i }; });
+      np.assignees.forEach(a   => { writes[`projects/${np.id}/payload/assignees/${a.id}`] = a; });
+      update(ref(db), writes).catch(() => {});
+    }
   }
 
   function handleDeleteProject(id: string) {
     const remaining = Object.keys(store.projects).filter(k => k !== id);
     if (remaining.length === 0) {
-      // Last project deleted — create a fresh default
       const np = createProject(data.projectName, getBasePhases(), getBaseAssignees(data), []);
       setStore({ activeProjectId: np.id, projects: { [np.id]: np } });
       setActivePhaseId(np.phases[0].id);
@@ -413,6 +688,11 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
       setFilters(EMPTY_FILTERS);
       setActiveTab('Panel');
     }
+
+    if (user) {
+      remove(projectRef(id)).catch(() => {});
+      remove(userProjectRef(user.uid, id)).catch(() => {});
+    }
   }
 
   function handleRenameProject(id: string, name: string) {
@@ -420,6 +700,11 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
       ...prev,
       projects: { ...prev.projects, [id]: { ...prev.projects[id], name } },
     }));
+
+    if (user) {
+      // Only write the name — never touch meta/members or other sub-nodes
+      set(ref(db, `projects/${id}/meta/name`), name).catch(() => {});
+    }
   }
 
   function handleRenamePhase(phaseId: string, name: string) {
@@ -445,9 +730,20 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
+  const TASK_TABS = ['Tablero', 'Gantt', 'Calendario', 'Lista', 'Equipo'];
+  const showEmptyState = tasks.length === 0 && TASK_TABS.includes(activeTab);
+
   return (
     <div className="flex flex-col h-screen overflow-hidden text-[#272b36] bg-[#f6f7f9]" style={{ fontSize: 13, lineHeight: 1.45 }}>
       <GlobalTopBar workspaceName={workspaceName} accentColor={accentColor} currentUser={currentUser} photoURL={currentUser.photoURL} onSignOut={onSignOut} />
+
+      {/* Offline banner — non-blocking, shown only when definitively disconnected */}
+      {connected === false && (
+        <div className="flex items-center justify-center gap-2 px-4 py-[7px] bg-[#fefce8] border-b border-[#fef08a] text-[12.5px] text-[#a16207] font-medium flex-shrink-0">
+          <span className="w-[7px] h-[7px] rounded-full bg-[#ca8a04] flex-shrink-0" />
+          Sin conexión — los cambios se guardarán al reconectar
+        </div>
+      )}
 
       <div className="flex flex-1 min-h-0">
         <SidebarPanel
@@ -466,6 +762,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
                 projects={store.projects}
                 activeProjectId={store.activeProjectId}
                 accentColor={accentColor}
+                currentUid={user?.uid}
                 onSwitch={switchToProject}
                 onCreate={handleCreateProject}
                 onDelete={handleDeleteProject}
@@ -477,10 +774,11 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
             onTabChange={setActiveTab}
             activePhase={activePhase}
             onShare={handleShare}
+            presenceUsers={presenceUsers}
+            onSettings={() => setShowSettings(true)}
           />
           <Toolbar
             accentColor={accentColor}
-            onReset={handleReset}
             onImportSharedView={onImportSharedView}
             filters={filters}
             onFiltersChange={setFilters}
@@ -496,7 +794,28 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
             }
           />
 
-          {activeTab === 'Tablero' ? (
+          {showEmptyState ? (
+            <div className="flex flex-col flex-1 items-center justify-center gap-4 text-center p-8">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: `${accentColor}18` }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={accentColor} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3"/>
+                  <path d="M9 12h6M12 9v6"/>
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-[15px] text-[#272b36]">Este proyecto no tiene tareas aún</p>
+                <p className="text-[12.5px] text-[#9aa0ad] mt-1">Crea la primera tarea para empezar a gestionar el proyecto.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTaskForm(true)}
+                className="flex items-center gap-2 px-4 py-2.5 text-[13px] font-semibold text-white rounded-xl border-0 cursor-pointer hover:brightness-110 transition-all shadow-sm"
+                style={{ background: accentColor }}
+              >
+                + Crear primera tarea
+              </button>
+            </div>
+          ) : activeTab === 'Tablero' ? (
             <KanbanBoard
               tasks={filteredTasks}
               assignees={allAssignees}
@@ -527,7 +846,6 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
           ) : (
             <DashboardGrid
               accentColor={accentColor}
-              kpis={kpis}
               workload={workload}
               assignees={allAssignees}
               tasks={tasks}
@@ -549,19 +867,38 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
         </div>
       )}
 
-      {/* Share modal */}
-      {showShareModal && (
-        <ShareModal
-          url={shareUrl}
+      {/* Undo delete toast */}
+      {deletedTask && (
+        <div
+          className="fixed bottom-5 right-5 flex items-center gap-3 bg-white border border-[#e8eaee] rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.12)] px-4 py-3 text-[13px] text-[#272b36] z-50 max-w-[360px]"
+          role="status"
+        >
+          <span className="flex-1 truncate">Tarea eliminada</span>
+          <button
+            type="button"
+            onClick={handleUndoDelete}
+            className="text-[#5a67f2] font-semibold text-[12.5px] bg-transparent border-0 cursor-pointer hover:underline flex-shrink-0"
+          >
+            Deshacer
+          </button>
+          <button
+            type="button"
+            onClick={() => { if (undoTimerRef.current) clearTimeout(undoTimerRef.current); setDeletedTask(null); }}
+            className="text-[#9aa0ad] bg-transparent border-0 cursor-pointer p-0.5 flex-shrink-0 flex items-center"
+          >
+            <X size={14} strokeWidth={2} />
+          </button>
+        </div>
+      )}
+
+      {/* Invite / share modal */}
+      {showInviteModal && user && (
+        <InviteModal
+          projectId={store.activeProjectId}
           projectName={activeProject?.name ?? 'Proyecto'}
-          onDownload={() => downloadShareFile({
-            version: 1,
-            projectName: activeProject?.name ?? 'Proyecto',
-            tasks,
-            phases: dynamicPhases,
-            assignees: rawAssigneesForImport,
-          })}
-          onClose={() => setShowShareModal(false)}
+          user={user}
+          accentColor={accentColor}
+          onClose={() => setShowInviteModal(false)}
         />
       )}
 
@@ -577,6 +914,15 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
           mode="create"
           onSave={handleAddTask}
           onCancel={() => setShowTaskForm(false)}
+        />
+      )}
+
+      {/* Project settings / danger zone */}
+      {showSettings && (
+        <ResetProjectModal
+          projectName={activeProject?.name ?? 'Proyecto'}
+          onReset={handleReset}
+          onClose={() => setShowSettings(false)}
         />
       )}
 

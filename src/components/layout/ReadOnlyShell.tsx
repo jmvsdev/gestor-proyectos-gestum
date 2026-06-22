@@ -72,11 +72,6 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
     [payload.phases, payload.tasks, activePhaseId]
   );
 
-  const kpis = [
-    { label: 'En curso',    value: payload.tasks.filter(t => t.status === 'en-curso').length,   color: ACCENT },
-    { label: 'Por validar', value: payload.tasks.filter(t => t.status === 'por-validar').length, color: '#b58aa6' },
-    { label: 'Completadas', value: payload.tasks.filter(t => t.status === 'completada').length,  color: '#1f9d63' },
-  ];
   const workload = [
     { label: 'Sin empezar', value: payload.tasks.filter(t => t.status === 'sin-empezar').length, color: '#9aa3b2' },
     { label: 'En curso',    value: payload.tasks.filter(t => t.status === 'en-curso').length,    color: ACCENT },
@@ -180,7 +175,6 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
         ) : (
           <DashboardGrid
             accentColor={ACCENT}
-            kpis={kpis}
             workload={workload}
             assignees={allAssignees}
             tasks={payload.tasks}

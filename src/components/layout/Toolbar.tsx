@@ -1,11 +1,10 @@
 import type { ReactNode } from 'react';
-import { Plus, Trash2, FolderOpen } from 'lucide-react';
+import { Plus, FolderOpen } from 'lucide-react';
 import { FilterPanel } from '../widgets/FilterPanel';
 import type { Assignee, FilterState } from '../../data/types';
 
 interface ToolbarProps {
   accentColor: string;
-  onReset: () => void;
   onImportSharedView?: () => void;
   extraActions?: ReactNode;
   filters: FilterState;
@@ -15,7 +14,7 @@ interface ToolbarProps {
 }
 
 export function Toolbar({
-  accentColor, onReset, onImportSharedView, extraActions,
+  accentColor, onImportSharedView, extraActions,
   filters, onFiltersChange, assignees, onAddTask,
 }: ToolbarProps) {
   return (
@@ -26,16 +25,6 @@ export function Toolbar({
         assignees={assignees}
         accentColor={accentColor}
       />
-
-      <button
-        type="button"
-        onClick={onReset}
-        title="Borrar localStorage y volver al mockData"
-        className="flex items-center gap-[7px] bg-white border border-[#e4e6ec] rounded-lg px-3 py-[6px] text-[12.5px] font-semibold text-[#ef4444] cursor-pointer shadow-[0_1px_1px_rgba(0,0,0,0.02)] hover:border-[#ef4444] hover:bg-[#fff5f5] transition-colors"
-      >
-        <Trash2 size={13} strokeWidth={2} />
-        Resetear datos
-      </button>
 
       {onImportSharedView && (
         <button

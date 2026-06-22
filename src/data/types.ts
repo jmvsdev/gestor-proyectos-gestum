@@ -39,6 +39,8 @@ export interface Task {
   risk?: 'alto' | 'medio' | 'bajo';
   isMilestone?: boolean;
   dependsOn?: string;
+  /** Display order within the project — assigned at write time, used to sort after Firebase round-trip */
+  order?: number;
 }
 
 export interface Assignee {
@@ -109,6 +111,7 @@ export interface StoredPhase {
   id: string;
   name: string;
   isImport?: boolean;
+  order?: number;
 }
 
 export interface StoredProject {
@@ -118,6 +121,7 @@ export interface StoredProject {
   tasks: Task[];
   phases: StoredPhase[];
   assignees: RawAssignee[];
+  ownerUid?: string;
 }
 
 export interface ProjectStore {

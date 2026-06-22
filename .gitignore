@@ -69,3 +69,11 @@ coverage
 .vite/
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Playwright MCP test artifacts
+.playwright-mcp/
+
+# Root-level dev screenshots
+/*.png
+/*.jpg
+/*.jpeg

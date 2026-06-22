@@ -6,6 +6,7 @@ interface ProjectDropdownProps {
   projects: Record<string, StoredProject>;
   activeProjectId: string;
   accentColor: string;
+  currentUid?: string;
   onSwitch: (id: string) => void;
   onCreate: (name: string) => void;
   onDelete: (id: string) => void;
@@ -13,7 +14,7 @@ interface ProjectDropdownProps {
 }
 
 export function ProjectDropdown({
-  projects, activeProjectId, accentColor,
+  projects, activeProjectId, accentColor, currentUid,
   onSwitch, onCreate, onDelete, onRename,
 }: ProjectDropdownProps) {
   const [open, setOpen]                   = useState(false);
@@ -45,6 +46,8 @@ export function ProjectDropdown({
   useEffect(() => { if (renamingId) renameRef.current?.focus(); }, [renamingId]);
 
   const projectList = Object.values(projects).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  const myProjects     = currentUid ? projectList.filter(p => !p.ownerUid || p.ownerUid === currentUid) : projectList;
+  const sharedProjects = currentUid ? projectList.filter(p => p.ownerUid  && p.ownerUid !== currentUid) : [];
   const activeName  = projects[activeProjectId]?.name ?? '—';
 
   function commitCreate() {
@@ -84,8 +87,13 @@ export function ProjectDropdown({
       {open && (
         <div className="absolute left-0 top-[calc(100%+6px)] z-50 bg-white rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.13)] border border-[#e8eaee] w-[270px] py-1.5 overflow-hidden">
 
-          {/* Project list */}
-          {projectList.map(project => (
+          {/* Mis proyectos */}
+          {sharedProjects.length > 0 && (
+            <p className="px-3 pt-1 pb-0.5 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wider">
+              Mis proyectos
+            </p>
+          )}
+          {myProjects.map(project => (
             <div key={project.id}>
               <div className="flex items-center gap-2 px-3 py-[7px] hover:bg-[#f6f7f9] group">
                 {/* Active check / spacer */}
@@ -168,6 +176,38 @@ export function ProjectDropdown({
               )}
             </div>
           ))}
+
+          {/* Compartidos conmigo */}
+          {sharedProjects.length > 0 && (
+            <>
+              <div className="h-px bg-[#f0f1f4] mx-3 my-1" />
+              <p className="px-3 pt-1 pb-0.5 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wider">
+                Compartidos conmigo
+              </p>
+              {sharedProjects.map(project => (
+                <div key={project.id}>
+                  <div className="flex items-center gap-2 px-3 py-[7px] hover:bg-[#f6f7f9] group">
+                    <span className="w-4 flex-shrink-0 flex items-center">
+                      {project.id === activeProjectId && (
+                        <Check size={13} strokeWidth={2.5} style={{ color: accentColor }} />
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => { if (project.id !== activeProjectId) { onSwitch(project.id); setOpen(false); } }}
+                      className="flex-1 text-left text-[13px] text-[#272b36] truncate bg-transparent border-0 cursor-pointer p-0"
+                      style={{ fontWeight: project.id === activeProjectId ? 600 : 400 }}
+                    >
+                      {project.name}
+                    </button>
+                    <span className="text-[10.5px] text-[#9aa0ad] bg-[#f3f4f7] rounded-md px-1.5 py-px flex-shrink-0">
+                      compartido
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
 
           {/* Separator + New project */}
           <div className="h-px bg-[#f0f1f4] mx-3 my-1" />
