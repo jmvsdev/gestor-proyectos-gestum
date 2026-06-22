@@ -36,14 +36,14 @@ const mockData = {
   tasks: [
     { id: 't1',  title: 'Definir alcance del proyecto',      status: 'en-curso',    assigneeId: 'u1', phaseId: 'f1', startDate: '2026-06-01', dueDate: '2026-06-20', priority: 'alta' },
     { id: 't2',  title: 'Levantamiento de requerimientos',   status: 'en-curso',    assigneeId: 'u2', phaseId: 'f1', startDate: '2026-06-05', dueDate: '2026-06-22', priority: 'alta',   tags: ['equipos'] },
-    { id: 't3',  title: 'Plan de trabajo Fase 1',            status: 'en-revision', assigneeId: 'u3', phaseId: 'f1', startDate: '2026-06-08', dueDate: '2026-06-19', priority: 'normal' },
-    { id: 't4',  title: 'Validación con dirección',          status: 'bloqueada',   assigneeId: 'u4', phaseId: 'f1', startDate: '2026-06-10', dueDate: '2026-06-18', priority: 'urgente' },
+    { id: 't3',  title: 'Plan de trabajo Fase 1',            status: 'en-revision', assigneeId: 'u3', phaseId: 'f1', startDate: '2026-06-08', dueDate: '2026-06-19', priority: 'normal',  dependsOn: 'Levantamiento de requerimientos' },
+    { id: 't4',  title: 'Validación con dirección',          status: 'bloqueada',   assigneeId: 'u4', phaseId: 'f1', startDate: '2026-06-10', dueDate: '2026-06-18', priority: 'urgente', dependsOn: 'Definir alcance del proyecto' },
     { id: 't5',  title: 'Análisis de riesgos',               status: 'por-validar', assigneeId: 'u1', phaseId: 'f1', startDate: '2026-06-12', dueDate: '2026-06-25', priority: 'alta' },
-    { id: 't6',  title: 'Definir proveedores clave',         status: 'en-curso',    assigneeId: 'u1', phaseId: 'f1', startDate: '2026-06-15', dueDate: '2026-06-24', priority: 'normal', tags: ['licitación'] },
+    { id: 't6',  title: 'Definir proveedores clave',         status: 'en-curso',    assigneeId: 'u1', phaseId: 'f1', startDate: '2026-06-15', dueDate: '2026-06-24', priority: 'normal',  tags: ['licitación'], dependsOn: 'Análisis de riesgos' },
     { id: 't7',  title: 'Cronograma general del proyecto',   status: 'en-curso',    assigneeId: 'u2', phaseId: 'f1', startDate: '2026-06-02', dueDate: '2026-06-21', priority: 'alta' },
-    { id: 't8',  title: 'Presupuesto inicial',               status: 'en-revision', assigneeId: 'u3', phaseId: 'f1', startDate: '2026-06-08', dueDate: '2026-06-20', priority: 'normal' },
+    { id: 't8',  title: 'Presupuesto inicial',               status: 'en-revision', assigneeId: 'u3', phaseId: 'f1', startDate: '2026-06-08', dueDate: '2026-06-20', priority: 'normal',  dependsOn: 'Cronograma general del proyecto' },
     { id: 't9',  title: 'Identificar stakeholders clave',    status: 'por-validar', assigneeId: null, phaseId: 'f1', startDate: '2026-06-18', dueDate: '2026-06-26', priority: 'baja' },
-    { id: 't10', title: 'Kick-off meeting con equipo',       status: 'sin-empezar', assigneeId: null, phaseId: 'f1', startDate: '2026-06-28', dueDate: '2026-07-05', priority: 'normal' },
+    { id: 't10', title: 'Kick-off meeting con equipo',       status: 'sin-empezar', assigneeId: null, phaseId: 'f1', startDate: '2026-06-28', dueDate: '2026-07-05', priority: 'normal',  dependsOn: 'Identificar stakeholders clave' },
   ],
 
   // totalTasks and openTasks are intentionally omitted — useProjectData computes them from tasks.
