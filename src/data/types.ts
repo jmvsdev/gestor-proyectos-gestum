@@ -2,6 +2,7 @@ export interface CurrentUser {
   name: string;
   shortName: string;
   initials: string;
+  photoURL?: string | null;
 }
 
 export interface AISummary {

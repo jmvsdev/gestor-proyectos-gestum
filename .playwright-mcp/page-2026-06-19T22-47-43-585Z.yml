@@ -1,0 +1,237 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G Gestum" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+        - generic [ref=e8]: Gestum
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - button "Atrás" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button "Adelante" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - generic [ref=e22]: Buscar
+        - generic [ref=e23]: Ctrl J
+      - generic "Juan Manuel Vargas" [ref=e25] [cursor=pointer]: JV
+    - generic [ref=e26]:
+      - complementary [ref=e27]:
+        - generic [ref=e29]: Inicio
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - button "Respuestas" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Respuestas
+            - button "Comentarios asignados" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Comentarios asignados
+            - button "Mis tareas" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+              - text: Mis tareas
+            - button "Más" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - text: Más
+          - generic [ref=e49]:
+            - generic [ref=e50]: Espacios
+            - button "Agregar espacio" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+          - button "✳ Todas las tareas - Gestum" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: ✳
+            - generic [ref=e55]: Todas las tareas - Gestum
+          - button "P Proyecto Hospital test" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: P
+            - generic [ref=e60]: Proyecto Hospital test
+            - img [ref=e61]
+          - generic [ref=e64]:
+            - button "Todo el proyecto" [active] [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e70]: Todo el proyecto
+            - button "Fase 1 – Planeación 10" [ref=e72] [cursor=pointer]:
+              - img [ref=e73]
+              - generic [ref=e76]: Fase 1 – Planeación
+              - generic [ref=e77]: "10"
+            - button "Fase 2 – Licitación y Compras" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - generic [ref=e83]: Fase 2 – Licitación y Compras
+            - button "Fase 3 – Obra Civil" [ref=e85] [cursor=pointer]:
+              - img [ref=e86]
+              - generic [ref=e89]: Fase 3 – Obra Civil
+            - button "Fase 4 – Instalación y Pruebas" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - generic [ref=e95]: Fase 4 – Instalación y Pruebas
+            - button "Fase 5 – Capacitación y Arranque" [ref=e97] [cursor=pointer]:
+              - img [ref=e98]
+              - generic [ref=e101]: Fase 5 – Capacitación y Arranque
+            - button "Spreadsheet Import" [ref=e103] [cursor=pointer]:
+              - img [ref=e104]
+              - generic [ref=e106]: Spreadsheet Import
+            - button "Nuevo espacio" [ref=e107] [cursor=pointer]:
+              - img [ref=e108]
+              - generic [ref=e109]: Nuevo espacio
+      - main [ref=e110]:
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]: P
+              - button "Proyecto Hospital test" [ref=e116] [cursor=pointer]:
+                - generic [ref=e117]: Proyecto Hospital test
+                - img [ref=e118]
+              - img [ref=e120]
+              - generic [ref=e123]: /
+              - img [ref=e124]
+              - generic [ref=e129]: Todo el proyecto
+              - img [ref=e130] [cursor=pointer]
+            - button "Compartir" [ref=e132] [cursor=pointer]:
+              - img [ref=e133]
+              - generic [ref=e139]: Compartir
+          - generic [ref=e140]:
+            - button "Tablero" [ref=e141] [cursor=pointer]:
+              - img [ref=e142]
+              - text: Tablero
+            - button "Calendario" [ref=e147] [cursor=pointer]:
+              - img [ref=e148]
+              - text: Calendario
+            - button "Equipo" [ref=e150] [cursor=pointer]:
+              - img [ref=e151]
+              - text: Equipo
+            - button "Gantt" [ref=e156] [cursor=pointer]:
+              - img [ref=e157]
+              - text: Gantt
+            - button "Lista" [ref=e159] [cursor=pointer]:
+              - img [ref=e160]
+              - text: Lista
+            - button "Panel" [ref=e161] [cursor=pointer]:
+              - img [ref=e162]
+              - text: Panel
+        - generic [ref=e167]:
+          - button "Filtros" [ref=e169] [cursor=pointer]:
+            - img [ref=e170]
+            - text: Filtros
+          - button "Resetear datos" [ref=e172] [cursor=pointer]:
+            - img [ref=e173]
+            - text: Resetear datos
+          - button "Importar vista compartida" [ref=e176] [cursor=pointer]:
+            - img [ref=e177]
+            - text: Importar vista compartida
+          - button "Importar CSV" [ref=e179] [cursor=pointer]:
+            - img [ref=e180]
+            - text: Importar CSV
+          - button "Agregar tarjeta" [ref=e184] [cursor=pointer]:
+            - img [ref=e185]
+            - text: Agregar tarjeta
+        - generic [ref=e670]:
+          - generic [ref=e671]:
+            - generic [ref=e672]:
+              - generic [ref=e673]:
+                - generic [ref=e676]: Sin asignar
+                - generic [ref=e677]: "2"
+                - generic [ref=e678]: tareas
+              - generic [ref=e679]:
+                - generic [ref=e682]: En curso
+                - generic [ref=e683]: "4"
+                - generic [ref=e684]: tareas
+              - generic [ref=e685]:
+                - generic [ref=e688]: Completadas
+                - generic [ref=e689]: "0"
+                - generic [ref=e690]: tareas
+            - generic [ref=e691]:
+              - generic [ref=e692]: Carga de trabajo por estado
+              - application [ref=e695]:
+                - generic [ref=e701]:
+                  - generic [ref=e703]: "1"
+                  - generic [ref=e705]: "2"
+                  - generic [ref=e707]: "3"
+                  - generic [ref=e709]: "4"
+                  - generic [ref=e711]: "5"
+                  - generic [ref=e713]: "6"
+                  - generic [ref=e715]: "7"
+                  - generic [ref=e717]: "8"
+                  - generic [ref=e719]: "9"
+                  - generic [ref=e721]: "10"
+              - generic [ref=e722]:
+                - generic [ref=e723]:
+                  - generic [ref=e725]: Sin empezar
+                  - generic [ref=e726]: "1"
+                - generic [ref=e727]:
+                  - generic [ref=e729]: En curso
+                  - generic [ref=e730]: "4"
+                - generic [ref=e731]:
+                  - generic [ref=e733]: En revisión
+                  - generic [ref=e734]: "2"
+                - generic [ref=e735]:
+                  - generic [ref=e737]: Bloqueada
+                  - generic [ref=e738]: "1"
+                - generic [ref=e739]:
+                  - generic [ref=e741]: Por validar
+                  - generic [ref=e742]: "2"
+          - generic [ref=e743]:
+            - generic [ref=e744]:
+              - generic [ref=e745]: Total de tareas por persona asignada
+              - generic [ref=e746]:
+                - generic [ref=e747]:
+                  - application [ref=e749]
+                  - generic:
+                    - generic: "10"
+                    - generic: tareas
+                - generic [ref=e750]:
+                  - generic [ref=e751]:
+                    - generic [ref=e753]: Juan Manuel Vargas
+                    - generic [ref=e754]: "3"
+                  - generic [ref=e755]:
+                    - generic [ref=e757]: Ana Torres
+                    - generic [ref=e758]: "2"
+                  - generic [ref=e759]:
+                    - generic [ref=e761]: Carlos Méndez
+                    - generic [ref=e762]: "2"
+                  - generic [ref=e763]:
+                    - generic [ref=e765]: Lucía Fernández
+                    - generic [ref=e766]: "1"
+                  - generic [ref=e767]:
+                    - generic [ref=e769]: Sin asignar
+                    - generic [ref=e770]: "2"
+            - generic [ref=e771]:
+              - generic [ref=e772]: Tareas abiertas por persona asignada
+              - generic [ref=e773]: Tareas
+              - application [ref=e776]:
+                - generic [ref=e799]:
+                  - generic [ref=e800]:
+                    - generic [ref=e802]: Juan
+                    - generic [ref=e804]: Ana
+                    - generic [ref=e806]: Carlos
+                    - generic [ref=e808]: Lucía
+                    - generic [ref=e810]: —
+                  - generic [ref=e811]:
+                    - generic [ref=e813]: "0"
+                    - generic [ref=e815]: "0.5"
+                    - generic [ref=e817]: "1"
+                    - generic [ref=e819]: "1.5"
+                    - generic [ref=e821]: "2"
+                    - generic [ref=e823]: "2.5"
+                    - generic [ref=e825]: "3"
+            - generic [ref=e826]:
+              - generic [ref=e827]: Tareas completadas esta semana
+              - generic [ref=e828]:
+                - generic [ref=e829]:
+                  - generic [ref=e830]:
+                    - generic [ref=e831]: "8"
+                    - generic [ref=e832]: vencen esta semana
+                  - generic [ref=e833]:
+                    - generic [ref=e834]: "0"
+                    - generic [ref=e835]: completadas
+                - generic [ref=e837]:
+                  - generic [ref=e838]: Cumplimiento
+                  - generic [ref=e839]: 0%
+                - generic [ref=e841]:
+                  - paragraph [ref=e842]: Pendientes
+                  - generic [ref=e843]:
+                    - generic [ref=e844]: Plan de trabajo Fase 1
+                    - generic [ref=e845]: hoy
+                  - generic [ref=e846]:
+                    - generic [ref=e847]: Definir alcance del proyecto
+                    - generic [ref=e848]: mañana
+                  - generic [ref=e849]:
+                    - generic [ref=e850]: Presupuesto inicial
+                    - generic [ref=e851]: mañana
+  - generic [ref=e332]: Juan

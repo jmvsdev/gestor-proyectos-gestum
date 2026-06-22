@@ -1,0 +1,197 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button "G Gestum" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7]: G
+        - generic [ref=e8]: Gestum
+        - img [ref=e9]
+      - generic [ref=e11]:
+        - button "Atrás" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - button "Adelante" [ref=e15] [cursor=pointer]:
+          - img [ref=e16]
+      - generic [ref=e18]:
+        - img [ref=e19]
+        - generic [ref=e22]: Buscar
+        - generic [ref=e23]: Ctrl J
+      - generic "Juan Manuel Vargas" [ref=e25] [cursor=pointer]: JV
+    - generic [ref=e26]:
+      - complementary [ref=e27]:
+        - generic [ref=e29]: Inicio
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - button "Respuestas" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Respuestas
+            - button "Comentarios asignados" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Comentarios asignados
+            - button "Mis tareas" [ref=e39] [cursor=pointer]:
+              - img [ref=e40]
+              - text: Mis tareas
+            - button "Más" [ref=e43] [cursor=pointer]:
+              - img [ref=e44]
+              - text: Más
+          - generic [ref=e49]:
+            - generic [ref=e50]: Espacios
+            - button "Agregar espacio" [ref=e51] [cursor=pointer]:
+              - img [ref=e52]
+          - button "✳ Todas las tareas - Gestum" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]: ✳
+            - generic [ref=e55]: Todas las tareas - Gestum
+          - button "P Proyecto Hospital test" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+            - generic [ref=e59]: P
+            - generic [ref=e60]: Proyecto Hospital test
+            - img [ref=e61]
+          - generic [ref=e64]:
+            - button "Todo el proyecto" [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+              - generic [ref=e70]: Todo el proyecto
+            - generic [ref=e1043]:
+              - img [ref=e1044]
+              - textbox [active] [ref=e1047]: Fase 1 – Planeación
+            - button "Fase 2 – Licitación y Compras" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - generic [ref=e83]: Fase 2 – Licitación y Compras
+            - button "Fase 3 – Obra Civil" [ref=e85] [cursor=pointer]:
+              - img [ref=e86]
+              - generic [ref=e89]: Fase 3 – Obra Civil
+            - button "Fase 4 – Instalación y Pruebas" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - generic [ref=e95]: Fase 4 – Instalación y Pruebas
+            - button "Fase 5 – Capacitación y Arranque" [ref=e97] [cursor=pointer]:
+              - img [ref=e98]
+              - generic [ref=e101]: Fase 5 – Capacitación y Arranque
+            - button "Spreadsheet Import" [ref=e103] [cursor=pointer]:
+              - img [ref=e104]
+              - generic [ref=e106]: Spreadsheet Import
+            - button "Nuevo espacio" [ref=e107] [cursor=pointer]:
+              - img [ref=e108]
+              - generic [ref=e109]: Nuevo espacio
+      - main [ref=e110]:
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]: P
+              - button "Proyecto Hospital test" [ref=e116] [cursor=pointer]:
+                - generic [ref=e117]: Proyecto Hospital test
+                - img [ref=e118]
+              - img [ref=e120]
+              - generic [ref=e123]: /
+              - img [ref=e124]
+              - generic [ref=e129]: Fase 1 – Planeación
+              - img [ref=e130] [cursor=pointer]
+            - button "Compartir" [ref=e132] [cursor=pointer]:
+              - img [ref=e133]
+              - generic [ref=e139]: Compartir
+          - generic [ref=e140]:
+            - button "Tablero" [ref=e141] [cursor=pointer]:
+              - img [ref=e142]
+              - text: Tablero
+            - button "Calendario" [ref=e147] [cursor=pointer]:
+              - img [ref=e148]
+              - text: Calendario
+            - button "Equipo" [ref=e150] [cursor=pointer]:
+              - img [ref=e151]
+              - text: Equipo
+            - button "Gantt" [ref=e156] [cursor=pointer]:
+              - img [ref=e157]
+              - text: Gantt
+            - button "Lista" [ref=e159] [cursor=pointer]:
+              - img [ref=e160]
+              - text: Lista
+            - button "Panel" [ref=e161] [cursor=pointer]:
+              - img [ref=e162]
+              - text: Panel
+        - generic [ref=e167]:
+          - button "Filtros" [ref=e169] [cursor=pointer]:
+            - img [ref=e170]
+            - text: Filtros
+          - button "Resetear datos" [ref=e172] [cursor=pointer]:
+            - img [ref=e173]
+            - text: Resetear datos
+          - button "Importar vista compartida" [ref=e176] [cursor=pointer]:
+            - img [ref=e177]
+            - text: Importar vista compartida
+          - button "Importar CSV" [ref=e179] [cursor=pointer]:
+            - img [ref=e180]
+            - text: Importar CSV
+          - button "Agregar tarjeta" [ref=e184] [cursor=pointer]:
+            - img [ref=e185]
+            - text: Agregar tarjeta
+        - generic [ref=e1049]:
+          - generic [ref=e1050]:
+            - generic [ref=e1052]: Tarea
+            - generic [ref=e1053]:
+              - generic [ref=e1056]: May 30
+              - generic [ref=e1059]: Jun 2
+              - generic [ref=e1062]: Jun 5
+              - generic [ref=e1065]: Jun 8
+              - generic [ref=e1068]: Jun 11
+              - generic [ref=e1071]: Jun 14
+              - generic [ref=e1074]: Jun 17
+              - generic [ref=e1077]: Jun 20
+              - generic [ref=e1080]: Jun 23
+              - generic [ref=e1083]: Jun 26
+              - generic [ref=e1086]: Jun 29
+              - generic [ref=e1089]: Jul 2
+              - generic [ref=e1092]: Jul 5
+              - generic [ref=e1095]: Jul 8
+          - generic [ref=e1096]:
+            - generic [ref=e1097] [cursor=pointer]:
+              - generic [ref=e1098]: JM
+              - generic [ref=e1099]: Definir alcance del proyecto
+            - generic [ref=e1116]:
+              - generic: Definir alcance del proyecto
+          - generic [ref=e1121]:
+            - generic [ref=e1122] [cursor=pointer]:
+              - generic [ref=e1123]: AT
+              - generic [ref=e1124]: Levantamiento de requerimientos
+            - generic [ref=e1141]:
+              - generic: Levantamiento de requerimientos
+          - generic [ref=e1146]:
+            - generic [ref=e1147] [cursor=pointer]:
+              - generic [ref=e1148]: CM
+              - generic [ref=e1149]: Plan de trabajo Fase 1
+            - generic [ref=e1166]:
+              - generic: Plan de trabajo Fase 1
+          - generic [ref=e1171]:
+            - generic [ref=e1172] [cursor=pointer]:
+              - generic [ref=e1173]: LF
+              - generic [ref=e1174]: Validación con dirección
+            - generic [ref=e1191]:
+              - generic: Validación con dirección
+          - generic [ref=e1196]:
+            - generic [ref=e1197] [cursor=pointer]:
+              - generic [ref=e1198]: JM
+              - generic [ref=e1199]: Análisis de riesgos
+            - generic [ref=e1216]:
+              - generic: Análisis de riesgos
+          - generic [ref=e1221]:
+            - generic [ref=e1222] [cursor=pointer]:
+              - generic [ref=e1223]: JM
+              - generic [ref=e1224]: Definir proveedores clave
+            - generic [ref=e1241]:
+              - generic: Definir proveedores clave
+          - generic [ref=e1246]:
+            - generic [ref=e1247] [cursor=pointer]:
+              - generic [ref=e1248]: AT
+              - generic [ref=e1249]: Cronograma general del proyecto
+            - generic [ref=e1266]:
+              - generic: Cronograma general del proyecto
+          - generic [ref=e1271]:
+            - generic [ref=e1272] [cursor=pointer]:
+              - generic [ref=e1273]: CM
+              - generic [ref=e1274]: Presupuesto inicial
+            - generic [ref=e1291]:
+              - generic: Presupuesto inicial
+          - generic [ref=e1296]:
+            - generic [ref=e1299] [cursor=pointer]: Identificar stakeholders clave
+            - generic [ref=e1316]:
+              - generic: Identificar stakeholders clave
+          - generic [ref=e1321]:
+            - generic [ref=e1324] [cursor=pointer]: Kick-off meeting con equipo
+            - generic [ref=e1341]:
+              - generic: Kick-off meeting con equipo
+  - generic [ref=e332]: Juan

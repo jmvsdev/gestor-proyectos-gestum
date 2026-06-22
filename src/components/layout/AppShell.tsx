@@ -28,6 +28,10 @@ interface AppShellProps {
   /** Non-null when App.tsx has parsed a shared-view file to import as a new project */
   pendingImport?: SharePayload | null;
   onPendingImportDone?: () => void;
+  /** When provided (from Firebase), used as the initial store instead of localStorage */
+  initialStore?: ProjectStore | null;
+  /** Called when user clicks "Cerrar sesión" */
+  onSignOut?: () => void;
 }
 
 // ── Storage version ───────────────────────────────────────────────────────────
@@ -171,7 +175,7 @@ const OPEN_STATUSES: Task['status'][] = [
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
-export function AppShell({ data, onImportSharedView, pendingImport, onPendingImportDone }: AppShellProps) {
+export function AppShell({ data, onImportSharedView, pendingImport, onPendingImportDone, initialStore, onSignOut }: AppShellProps) {
   // ── UI state ─────────────────────────────────────────────────────────────────
   const [activeTab, setActiveTab]           = useState('Panel');
   const [importResult, setImportResult]     = useState<string | null>(null);
@@ -182,7 +186,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
   const [selectedTask, setSelectedTask]     = useState<Task | null>(null);
 
   // ── Project store ─────────────────────────────────────────────────────────────
-  const [store, setStore] = useState<ProjectStore>(() => loadOrMigrate(data));
+  const [store, setStore] = useState<ProjectStore>(() => initialStore ?? loadOrMigrate(data));
 
   const activeProject: StoredProject | undefined = store.projects[store.activeProjectId];
 
@@ -443,7 +447,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
 
   return (
     <div className="flex flex-col h-screen overflow-hidden text-[#272b36] bg-[#f6f7f9]" style={{ fontSize: 13, lineHeight: 1.45 }}>
-      <GlobalTopBar workspaceName={workspaceName} accentColor={accentColor} currentUser={currentUser} />
+      <GlobalTopBar workspaceName={workspaceName} accentColor={accentColor} currentUser={currentUser} photoURL={currentUser.photoURL} onSignOut={onSignOut} />
 
       <div className="flex flex-1 min-h-0">
         <SidebarPanel
