@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Reply, MessageSquare, CheckSquare, MoreHorizontal,
   ChevronRight, Lock, Plus,
   TableProperties, CheckSquare2, Layers,
 } from 'lucide-react';
@@ -15,13 +14,6 @@ interface SidebarPanelProps {
   onPhaseChange: (phaseId: string) => void;
   onRenamePhase: (phaseId: string, newName: string) => void;
 }
-
-const quickLinks = [
-  { label: 'Respuestas',            Icon: Reply },
-  { label: 'Comentarios asignados', Icon: MessageSquare },
-  { label: 'Mis tareas',            Icon: CheckSquare },
-  { label: 'Más',                   Icon: MoreHorizontal },
-];
 
 export function SidebarPanel({ projectName, accentColor, phases, activePhaseId, onPhaseChange, onRenamePhase }: SidebarPanelProps) {
   const [renamingId, setRenamingId]     = useState<string | null>(null);
@@ -56,21 +48,7 @@ export function SidebarPanel({ projectName, accentColor, phases, activePhaseId, 
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-2 pb-4">
-        {/* Quick links */}
-        <div className="flex flex-col gap-px mb-2">
-          {quickLinks.map(({ label, Icon }) => (
-            <button
-              key={label}
-              type="button"
-              className="flex items-center gap-[10px] px-2 py-[7px] rounded-lg cursor-pointer text-[#4a4f5c] text-[13px] font-medium hover:bg-[#f0f1f4] transition-colors bg-transparent border-0 text-left w-full"
-            >
-              <Icon size={16} strokeWidth={1.9} className="text-[#8b909c] flex-shrink-0" />
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div className="h-px bg-[#ececf0] mx-2 my-2" />
+        <div className="h-px bg-[#ececf0] mx-2 mb-2" />
 
         {/* Espacios */}
         <div className="flex items-center justify-between px-2 mb-1">
