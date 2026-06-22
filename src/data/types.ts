@@ -63,6 +63,9 @@ export interface WorkloadSegment {
   color: string;
 }
 
+/** Sentinel value for "show all phases at once" */
+export const ALL_PHASES_ID = 'ALL' as const;
+
 // ── Filters ───────────────────────────────────────────────────────────────────
 
 export interface FilterState {

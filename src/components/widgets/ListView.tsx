@@ -1,9 +1,10 @@
 import { Flag } from 'lucide-react';
-import type { Task, Assignee } from '../../data/types';
+import type { Task, Assignee, Phase } from '../../data/types';
 
 interface ListViewProps {
   tasks: Task[];
   assignees: Assignee[];
+  phases?: Phase[]; // when provided, show Fase column (all-phases mode)
   onTasksChange: (tasks: Task[]) => void;
   onTaskClick?: (task: Task) => void;
   readOnly?: boolean;
@@ -50,7 +51,10 @@ function formatDate(iso: string): string {
   return `${months[m - 1]} ${d}`;
 }
 
-export function ListView({ tasks, assignees, onTasksChange, onTaskClick, readOnly = false }: ListViewProps) {
+export function ListView({ tasks, assignees, phases, onTasksChange, onTaskClick, readOnly = false }: ListViewProps) {
+  const phaseMap = new Map(phases?.map(p => [p.id, p.name]) ?? []);
+  const colSpan = phases ? 7 : 6;
+
   function handleStatusChange(taskId: string, newStatus: Task['status']) {
     onTasksChange(tasks.map(t => t.id === taskId ? { ...t, status: newStatus } : t));
   }
@@ -60,7 +64,10 @@ export function ListView({ tasks, assignees, onTasksChange, onTaskClick, readOnl
       <table className="w-full border-collapse text-[13px] min-w-[640px]">
         <thead>
           <tr className="border-b border-[#e8eaee]">
-            <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide w-[40%]">Tarea</th>
+            <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide w-[35%]">Tarea</th>
+            {phases && (
+              <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide">Fase</th>
+            )}
             <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide">Asignado</th>
             <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide">Estado</th>
             <th className="text-left py-2 px-3 text-[11px] font-semibold text-[#9aa0ad] uppercase tracking-wide">Prioridad</th>
@@ -71,7 +78,7 @@ export function ListView({ tasks, assignees, onTasksChange, onTaskClick, readOnl
         <tbody>
           {tasks.length === 0 && (
             <tr>
-              <td colSpan={6} className="py-12 text-center text-[#9aa0ad]">No hay tareas en esta fase.</td>
+              <td colSpan={colSpan} className="py-12 text-center text-[#9aa0ad]">No hay tareas en esta fase.</td>
             </tr>
           )}
           {tasks.map((task, i) => {
@@ -106,6 +113,15 @@ export function ListView({ tasks, assignees, onTasksChange, onTaskClick, readOnl
                     ))}
                   </div>
                 </td>
+
+                {/* Phase (only in all-phases mode) */}
+                {phases && (
+                  <td className="py-2.5 px-3">
+                    <span className="text-[12px] text-[#4a4f5c] truncate max-w-[120px] block">
+                      {phaseMap.get(task.phaseId) ?? task.phaseId}
+                    </span>
+                  </td>
+                )}
 
                 {/* Assignee */}
                 <td className="py-2.5 px-3">

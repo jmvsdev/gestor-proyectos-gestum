@@ -3,14 +3,15 @@ import { WorkloadBar } from './WorkloadBar';
 import { TasksByAssigneeDonut } from './TasksByAssigneeDonut';
 import { OpenTasksBar } from './OpenTasksBar';
 import { CompletedThisWeekCard } from './CompletedThisWeekCard';
-import type { KPI, WorkloadSegment, Assignee } from '../../data/types';
+import type { KPI, WorkloadSegment, Assignee, Task } from '../../data/types';
 
 interface DashboardGridProps {
   accentColor: string;
   kpis: KPI[];
   workload: WorkloadSegment[];
   assignees: Assignee[];
-  completedThisWeek: number;
+  tasks: Task[];
+  today: string;
 }
 
 export function DashboardGrid({
@@ -18,7 +19,8 @@ export function DashboardGrid({
   kpis,
   workload,
   assignees,
-  completedThisWeek,
+  tasks,
+  today,
 }: DashboardGridProps) {
   return (
     <div className="flex-1 overflow-y-auto px-[18px] pb-[22px] pt-4 min-h-0">
@@ -36,7 +38,7 @@ export function DashboardGrid({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <TasksByAssigneeDonut assignees={assignees} />
         <OpenTasksBar assignees={assignees} accentColor={accentColor} />
-        <CompletedThisWeekCard count={completedThisWeek} />
+        <CompletedThisWeekCard tasks={tasks} today={today} />
       </div>
     </div>
   );

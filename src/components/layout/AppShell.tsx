@@ -20,7 +20,7 @@ import type {
   Assignee, FilterState, Phase, ProjectData, Task,
   RawAssignee, StoredProject, ProjectStore, StoredPhase,
 } from '../../data/types';
-import { EMPTY_FILTERS, applyFilters } from '../../data/types';
+import { EMPTY_FILTERS, applyFilters, ALL_PHASES_ID } from '../../data/types';
 
 interface AppShellProps {
   data: ProjectData;
@@ -233,7 +233,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
   );
 
   const phaseTasks = useMemo(
-    () => tasks.filter(t => t.phaseId === activePhaseId),
+    () => activePhaseId === ALL_PHASES_ID ? tasks : tasks.filter(t => t.phaseId === activePhaseId),
     [tasks, activePhaseId]
   );
 
@@ -247,8 +247,11 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
     [filteredTasks]
   );
 
-  const activePhase        = dynamicPhases.find(p => p.active)?.name ?? '';
-  const completedThisWeek  = phaseTasks.filter(t => t.status === 'completada').length;
+  const activePhase = activePhaseId === ALL_PHASES_ID
+    ? 'Todo el proyecto'
+    : (dynamicPhases.find(p => p.active)?.name ?? '');
+
+  const today = new Date().toISOString().slice(0, 10);
 
   // Compute KPIs + workload from active project tasks (all phases)
   const kpis = useMemo(() => [
@@ -294,6 +297,16 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
   }
 
   function handleViewTasksChange(updatedVisible: Task[]) {
+    if (activePhaseId === ALL_PHASES_ID) {
+      updateActiveProject(p => ({
+        ...p,
+        tasks: [
+          ...p.tasks.filter(t => !filteredTaskIds.has(t.id)),
+          ...updatedVisible,
+        ],
+      }));
+      return;
+    }
     updateActiveProject(p => ({
       ...p,
       tasks: [
@@ -405,6 +418,13 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
     }));
   }
 
+  function handleRenamePhase(phaseId: string, name: string) {
+    updateActiveProject(p => ({
+      ...p,
+      phases: p.phases.map(ph => ph.id === phaseId ? { ...ph, name } : ph),
+    }));
+  }
+
   function handleImportProject(payload: SharePayload) {
     const phases: StoredPhase[] = payload.phases.map(({ taskCount: _t, active: _a, ...p }) => p);
     const np = createProject(payload.projectName, phases, payload.assignees, payload.tasks);
@@ -432,6 +452,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
           phases={dynamicPhases}
           activePhaseId={activePhaseId}
           onPhaseChange={setActivePhaseId}
+          onRenamePhase={handleRenamePhase}
         />
 
         <main className="flex flex-col flex-1 min-w-0 min-h-0 bg-[#f6f7f9]">
@@ -483,6 +504,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
             <GanttChart
               tasks={filteredTasks}
               assignees={allAssignees}
+              phases={activePhaseId === ALL_PHASES_ID ? dynamicPhases : undefined}
               onTasksChange={handleViewTasksChange}
               onTaskClick={setSelectedTask}
             />
@@ -492,6 +514,7 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
             <ListView
               tasks={filteredTasks}
               assignees={allAssignees}
+              phases={activePhaseId === ALL_PHASES_ID ? dynamicPhases : undefined}
               onTasksChange={handleViewTasksChange}
               onTaskClick={setSelectedTask}
             />
@@ -503,7 +526,8 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
               kpis={kpis}
               workload={workload}
               assignees={allAssignees}
-              completedThisWeek={completedThisWeek}
+              tasks={tasks}
+              today={today}
             />
           )}
         </main>
@@ -542,7 +566,9 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
         <TaskFormModal
           phases={dynamicPhases}
           assignees={allAssignees}
-          defaultPhaseId={activePhaseId}
+          defaultPhaseId={activePhaseId === ALL_PHASES_ID
+            ? (dynamicPhases.find(p => !p.isImport)?.id ?? dynamicPhases[0]?.id ?? 'f1')
+            : activePhaseId}
           accentColor={accentColor}
           mode="create"
           onSave={handleAddTask}
@@ -555,7 +581,9 @@ export function AppShell({ data, onImportSharedView, pendingImport, onPendingImp
         <TaskFormModal
           phases={dynamicPhases}
           assignees={allAssignees}
-          defaultPhaseId={activePhaseId}
+          defaultPhaseId={activePhaseId === ALL_PHASES_ID
+            ? (dynamicPhases.find(p => !p.isImport)?.id ?? dynamicPhases[0]?.id ?? 'f1')
+            : activePhaseId}
           accentColor={accentColor}
           mode="edit"
           initialTask={selectedTask}

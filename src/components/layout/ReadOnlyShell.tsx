@@ -84,7 +84,7 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
     { label: 'Bloqueada',   value: payload.tasks.filter(t => t.status === 'bloqueada').length,   color: '#ef4444' },
     { label: 'Por validar', value: payload.tasks.filter(t => t.status === 'por-validar').length, color: '#b58aa6' },
   ];
-  const completedThisWeek = phaseTasks.filter(t => t.status === 'completada').length;
+  const today = new Date().toISOString().slice(0, 10);
 
   const noop = () => {};
 
@@ -183,7 +183,8 @@ export function ReadOnlyShell({ payload }: ReadOnlyShellProps) {
             kpis={kpis}
             workload={workload}
             assignees={allAssignees}
-            completedThisWeek={completedThisWeek}
+            tasks={payload.tasks}
+            today={today}
           />
         )}
       </div>

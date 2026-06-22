@@ -119,9 +119,8 @@ export function ProjectDropdown({
                   </button>
                 )}
 
-                {/* Rename + delete — always visible, not just on hover */}
                 {renamingId !== project.id && (
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                  <div className="flex gap-1 flex-shrink-0">
                     <button
                       type="button"
                       title="Renombrar"
