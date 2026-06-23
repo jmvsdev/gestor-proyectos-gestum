@@ -61,10 +61,10 @@ function buildWeekBars(weekDates: Date[], tasks: Task[]): TaskBar[] {
   const weekEnd = weekDates[6];
 
   const candidates: Omit<TaskBar, 'lane'>[] = tasks
-    .filter(t => t.startDate && t.dueDate)
+    .filter(t => t.dueDate)
     .map(t => {
-      const s = parseISO(t.startDate!);
       const e = parseISO(t.dueDate!);
+      const s = t.startDate ? parseISO(t.startDate) : e;
       if (e < weekStart || s > weekEnd) return null;
       const startCol = Math.max(0, Math.round((s.getTime() - weekStart.getTime()) / 86400000));
       const endCol   = Math.min(6, Math.round((e.getTime() - weekStart.getTime()) / 86400000));
